@@ -15,22 +15,11 @@
 <div class="wrapper">
 
 	<header class="header">
-		<strong>Header:</strong>
-    </header><!-- .header-->
+		{% load staticfiles %}
+        <img src="{% static "images/base/rigery_logo.png" %}" alt="rigery_logo" width="171" height="50" style="margin: 0px 15px 0px 15px"/>
+    </header>
 
-	<div class="middle">
-
-		<div class="container">
-			<main class="content">
-				<strong>Content:</strong>
-            </main><!-- .content -->
-		</div><!-- .container-->
-
-		<aside class="left-sidebar">
-			<strong>Left Sidebar:</strong>
-        </aside><!-- .left-sidebar -->
-
-	</div><!-- .middle-->
+{% block content %}{% endblock %}
 
 </div><!-- .wrapper -->
 
