@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block style %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "css/index.css" %}" />
+{% endblock %}
+{% block header_buttons %}
+    <a href="accounts/logout/" class="button_sign_out">Sign out</a>
+{% endblock %}
+{% block header_menu %}
+    <nav class="horizontal_menu">
+        <ul>
+            <li><a href="/"><b>Item_1</b></a></li>
+            <li><a href="/"><b>Item_2</b></a></li>
+            <li><a href="/"><b>Item_3</b></a></li>
+            <li><a href="/"><b>Item_4</b></a></li>
+        </ul>
+    </nav>
+{% endblock %}
+{% block main_menu %}
+    <nav class="sidebar">
+        <h4 class="menu">Menu_1</h4>
+        <ul>
+            <li>option_1</li>
+            <li>option_2</li>
+            <li>option_3</li>
+            <li>option_4</li>
+            <li>option_5</li>
+        </ul>
+        <h4 class="menu">Menu_2</h4>
+        <ul>
+            <li>option_1</li>
+            <li>option_2</li>
+            <li>option_3</li>
+            <li>option_4</li>
+            <li>option_5</li>
+        </ul>
+        <h4 class="menu">Menu_3</h4>
+        <ul>
+            <li>option_1</li>
+            <li>option_2</li>
+            <li>option_3</li>
+            <li>option_4</li>
+            <li>option_5</li>
+        </ul>
+    </nav>
+{% endblock %}
+{% block content %}
+    <section class="content_section">
+        <article>
+            <header>
+                <h2>block_1</h2>
+            </header>
+            <p>parameters parameters parameters parameters parameters parameters parameters parameters</p>
+            <p>parameters parameters parameters parameters parameters parameters parameters parameters</p>
+            <p>parameters parameters parameters parameters parameters parameters parameters parameters</p>
+            <h3>Current state1:</h3>
+            <meter value="2000" min="0" max="3500" title="Processor:">
+            </meter>
+            <h3>Current state2:</h3>
+            <meter value="2500" min="0" max="3500" title="Processor:">
+            </meter>
+            <h3>Current state3:</h3>
+            <meter value="2800" min="0" max="3500" title="Processor:">
+            </meter>
+            <h3>Current state4:</h3>
+            <meter value="1200" min="0" max="3500" title="Processor:">
+            </meter>
+            <p>parameters parameters parameters parameters parameters parameters parameters parameters</p>
+            <p>parameters parameters parameters parameters parameters parameters parameters parameters</p>
+            <p>parameters parameters parameters parameters parameters parameters parameters parameters</p>
+        </article>
+    </section>
+{% endblock %}

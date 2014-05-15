@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3&-6r358ursm!6)9w-j9vl8zh-rb(vgu^=mf_^@x_+z1i%ue0s'
+SECRET_KEY = '(&+7w98(!t0@xv@aj88z&wj9=yp+jd0^l0p@+p)+s(ue7!51s-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'authentication',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -60,7 +61,7 @@ WSGI_APPLICATION = 'rigery.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.rigery'),
     }
 }
 

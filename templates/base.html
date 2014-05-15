@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Rigery panel</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "css/base.css" %}" />
+    {% block style %}{% endblock %}
+    {% block scripts %}{% endblock %}
+</head>
+<body>
+    <section id="main_section" class="section">
+        <header class="header">
+            <h2 class="header_text">Rigery panel</h2>
+            {% block header_buttons %}{% endblock %}
+            {% block header_menu %}{% endblock %}
+        </header>
+        {% block main_menu %} {% endblock %}
+        {% block content%} {% endblock %}
+    </section>
+    <footer class="footer">
+        <p class="footer_text">Copyright (c) 2014 [телеграфный завод]</p>
+    </footer>
+</body>
+</html>

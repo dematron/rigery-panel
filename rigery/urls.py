@@ -1,9 +1,10 @@
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
-import views
-
 admin.autodiscover()
+
+from rigery.views import test_response
+from authentication.views import sign_in, sign_out
 
 urlpatterns = patterns('',
     # Examples:
@@ -11,6 +12,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/login', views.sign_in),
-    url(r'^$', views.test_response),
+    url(r'^$', test_response),
+    url(r'^accounts/login/$', sign_in),
+    url(r'^accounts/logout/$', sign_out),
 )

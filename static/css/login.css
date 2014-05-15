@@ -1,0 +1,41 @@
+.login_window {
+    margin: 8% auto;
+    padding: 0;
+    background: LightSteelBlue;
+    width: 520px;
+    height: 330px;
+    color: black;
+    box-shadow: 0 0 20px rgba(0,0,0,0.7);
+}
+
+.login {
+    margin: 5px 0px 0px 100px;
+    width: 320px;
+    font-size: 14pt;
+}
+
+.access_denied_text {
+    margin: 15px 0px -20px 200px;
+    color: red;
+}
+
+.login_text {
+    margin: 30px 0px 0px 100px;
+}
+
+.login_text_header {
+    margin: 0px 0px 0px 125px;
+    padding: 30px 0px 0px 0px;
+}
+
+.button_sign_in{
+    color:black;
+    margin: 0px 0px 20px 210px;
+    padding: 6px 20px 6px 20px;
+    line-height:35px;
+    background:SteelBlue;
+    text-decoration:none;
+    border-radius: 3px;
+}
+
+a:hover{color:#fff; background:CadetBlue;}

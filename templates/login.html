@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block style %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "css/login.css" %}" />
+{% endblock %}
+{% block content %}
+    <section class="login_window">
+        <h2 class="login_text_header">Sign in to Rigery panel</h2>
+        <form id="login_form" action="" method="post">
+            {% csrf_token %}
+            <p class="{{ access_denied_class }}"><b>{{ access_denied }}</b></p>
+            <p class="login_text">Login:</p>
+            <input type="email" name="username" id="username" class="login">
+            <p class="login_text">Password:</p>
+            <input type="password" name="password" id="password" class="login">
+            <p class="login_text"></p>
+            <a href="#" onclick="document.getElementById('login_form').submit(); return false;" class="button_sign_in">Sign in</a>
+        </form>
+    </section>
+{% endblock %}
