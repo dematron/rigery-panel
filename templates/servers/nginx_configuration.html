@@ -1,0 +1,130 @@
+{% extends "index.html" %}
+{% block content %}
+    <section class="content_section">
+        <article>
+            <header>
+                <h2>nginx configuration:</h2>
+            </header>
+            <fieldset id="fieldset_main">
+                <legend>main</legend>
+                <p>user <input id="input_user" type="text">;</p>
+                <p>worker_processes <input id="input_worker_process" type="number" min="1" max="100">;</p>
+                <p>pid <input id="input_pid" type="text">;</p>
+                <p>error_log <input id="input_error_log" type="text">; #/path/to/log log_level; log_level like [ debug | info | notice | warn | error | crit ]</p>
+                <fieldset id="fieldset_events">
+                    <legend>events</legend>
+                    <p>connections <input id="input_connections" type="number" min="1" max="10000">;</p>
+                    <p>use <input id="input_use" type="text">; # use [ kqueue | rtsig | epoll | /dev/poll | select | poll ];</p>
+                </fieldset>
+                <fieldset id="_fieldset_http">
+                    <legend>http</legend>
+                    <p>include <input id="input_include" type="text">;</p>
+                    <p>default_type <input id="input_default_type" type="text">;</p>
+                    <p>log_format <input id="input_log_format" type="text"></p> {# может быть несколько #}
+                    <textarea id="textarea_log_format" cols="50" rows="4"></textarea>;
+                    <p>client_header_timeout <input id="input_client_header_timeout" type="text">;</p>
+                    <p>client_body_timeout <input id="input_client_body_timeout" type="text">;</p>
+                    <p>send_timeout <input id="input_send_timeout" type="text">;</p>
+                    <p>client_header_buffer_size <input id="input_client_header_buffer_size" type="text">;</p>
+                    <p>large_client_header_buffers <input id="input_large_client_header_buffers" type="text">;</p>
+                    <p>gzip
+                        <select id="select_gzip">
+                            <option></option>
+                            <option>on</option>
+                            <option>off</option>
+                        </select>;
+                    </p>
+                    <p>gzip_min_length <input id="input_gzip_min_length" type="number" min="1">;</p>
+                    <p>gzip_buffers <input id="input_gzip_buffers" type="text">;</p>
+                    <p>gzip_types <input id="input_gzip_types" type="text">;</p>
+                    <p>output_buffers <input id="input_output_buffers" type="text">;</p>
+                    <p>postpone_output <input id="input_postpone_output" type="text">;</p>
+                    <p>sendfile
+                        <select id="select_sendfile">
+                            <option></option>
+                            <option>on</option>
+                            <option>off</option>
+                        </select>;
+                    </p>
+                    <p>tcp_nopush
+                        <select id="select_tcp_nopush">
+                            <option></option>
+                            <option>on</option>
+                            <option>off</option>
+                        </select>;
+                    </p>
+                    <p>tcp_nodelay
+                        <select id="select_tcp_nodelay">
+                            <option></option>
+                            <option>on</option>
+                            <option>off</option>
+                        </select>;
+                    </p>
+                    <p>send_lowat <input id="input_send_lowat" type="number" min="1">;</p>
+                    <p>keepalive_timeout <input id="input_keepalive_timeout" type="text">;</p>
+                    <p>lingering_time <input id="input_lingering_time" type="number" min="1">;</p>
+                    <p>lingering_timeout <input id="input_lingering_timeout" type="number" min="1">;</p>
+                    <p>treset_timedout_connection
+                        <select id="select_reset_timedout_connection">
+                            <option></option>
+                            <option>on</option>
+                            <option>off</option>
+                        </select>;
+                    </p>
+                    <fieldset id="fieldset_server"> {# может быть несколько данных блоков #}
+                        <legend>server</legend>
+                        <p>listen <input id="input_listen" type="text">;</p>
+                        <p>server_name <input id="input_server_name" type="text">;</p>
+                        <p>access_log <input id="input_access_log" type="text">;</p>
+                        <p>error_page <input id="input_error_page" type="text">;</p>
+                        <fieldset id="fieldset_location"> {# может быть несколько данных блоков #}
+                            <legend>location</legend>
+                            <p>location <input id="input_location" type="text"></p>
+                            <p>proxy_pass <input id="input_proxy_pass" type="text">;</p>
+                            <p>proxy_redirect
+                            <select id="select_proxy_redirect">
+                                <option></option>
+                                <option>on</option>
+                                <option>off</option>
+                            </select>;
+                            </p>
+                            <p>proxy_set_header <input id="input_proxy_set_header" type="text">;</p> {# может быть несколько #}
+                            <p>client_max_body_size <input id="input_client_max_body_size" type="text">;</p>
+                            <p>client_body_buffer_size <input id="input_client_body_buffer_size" type="text">;</p>
+                            <p>client_body_temp_path <input id="input_client_client_body_temp_path" type="text">;</p>
+                            <p>proxy_connect_timeout <input id="input_proxy_connect_timeout" type="number" min="1">;</p>
+                            <p>proxy_send_timeout <input id="input_proxy_send_timeout" type="number" min="1">;</p>
+                            <p>proxy_read_timeout <input id="input_proxy_read_timeout" type="number" min="1">;</p>
+                            <p>proxy_send_lowat <input id="input_proxy_send_lowat" type="number" min="1">;</p>
+                            <p>proxy_buffer_size <input id="input_proxy_buffer_size" type="text">;</p>
+                            <p>proxy_buffers <input id="input_proxy_buffers" type="text">;</p>
+                            <p>proxy_busy_buffers_size <input id="input_proxy_busy_buffers_size" type="text">;</p>
+                            <p>proxy_temp_file_write_size <input id="input_proxy_temp_file_write_size" type="text">;</p>
+                            <p>proxy_temp_path <input id="input_proxy_temp_path" type="text">;</p>
+                            <p>valid_referers <input id="input_valid_referers" type="text">;</p>
+                            <p>root <input id="input_root" type="text">;</p>
+                            <p>rewrite <input id="input_rewrite" type="text">;</p>
+                            <p>charset <input id="input_charset" type="text">;</p>
+                            <p>source_charset <input id="input_source_charset" type="text">;</p>
+                            <p>autoindex
+                            <select id="select_autoindex">
+                                <option></option>
+                                <option>on</option>
+                                <option>off</option>
+                            </select>;
+                            </p>
+                            <p>access_log
+                            <select id="select_access_log">
+                                <option></option>
+                                <option>on</option>
+                                <option>off</option>
+                            </select>;
+                            </p>
+                            <p>expires <input id="input_expires" type="text">;</p>
+                        </fieldset>
+                    </fieldset>
+                </fieldset>
+            </fieldset>
+        </article>
+    </section>
+{% endblock %}
