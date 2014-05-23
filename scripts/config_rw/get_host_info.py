@@ -1,21 +1,47 @@
 #!/usr/bin/env python
 __author__ = 'iLiKo'
 
+import fcntl
 import multiprocessing
 import os
 import platform
 import re
 import socket
-import sys
+import struct
 import subprocess
+import sys
 import time
-#import psutil
 
 # Name
 hostname = socket.gethostname()
 
 # IP Address
-host_ip = socket.gethostbyname(socket.gethostname())
+def get_interface_ip(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, struct.pack('256s', ifname[:15]))[20:24])
+
+def get_lan_ip():
+    interfaces = []
+    ip = socket.gethostbyname(socket.gethostname())
+    if ip.startswith("127."):
+        interfaces = [
+            "eth0",
+            "eth1",
+            "eth2",
+            "wlan0",
+            "wlan1",
+            "wifi0",
+            "ath0",
+            "ath1",
+            "ppp0",
+            ]
+    for ifname in interfaces:
+            try:
+                ip = get_interface_ip(ifname)
+                break
+            except IOError:
+                pass
+    return ip
 
 # OS
 os_name = platform.system()
@@ -47,7 +73,6 @@ kernel_cpu = platform.release() + " on " + platform.processor()
 # Processor information
 def get_processor_info():
     if platform.system() == "Linux":
-        #command = "cat /proc/cpuinfo"
         command = subprocess.Popen(["cat", "/proc/cpuinfo"], stdout=subprocess.PIPE).communicate()[0].strip()
         return command.splitlines()[4][13:]
     elif platform.system() == "Darwin":
@@ -66,27 +91,45 @@ else:
 # System uptime
 def system_uptime():
     o = os.popen("uptime").read()
-    m = re.search("up ((\d+) days,)?\s+(\d+):(\d+)", o)
-    if m:
+    if o.find("min") != -1:
+        m = re.search("up ((\d+) min,)", o)
+        g, s = m.groups(), ""
+        if g[1] and int(g[1]) > 0:
+            if int(g[1]) == 1:
+                s = s + g[1] + " minute"
+            else:
+                s = s + g[1] + " minutes "
+    else:
+        m = re.search("up ((\d+) days,)?\s+(\d+):(\d+)", o)
         g, s = m.groups(), ""
         if g[1]:
-            s = s + g[1] + " days, "
+            if int(g[1]) == 1:
+                s = s + g[1] + " day, "
+            else:
+                s = s + g[1] + " days, "
         if g[2] and int(g[2]) > 0:
-            s = s + g[2] + " hours, "
-        s = s + g[3] + " minutes"
+            if int(g[2]) == 1:
+                print g[2]
+                s = s + g[2] + " hour, "
+            else:
+                s = s + g[2] + " hours, "
+        if int(g[3]) == 1:
+            s = s + g[3] + " minute"
+        else:
+            s = s + g[3] + " minutes "
     return s
 
 # Number of running processes
 def processes_numbers():
-    if platform.system() == "Darwin":
-        processoutput = subprocess.Popen(['launchctl', 'list'], stdout=subprocess.PIPE).stdout.read()
-        process_count = len((processoutput).split('\n')) - 1
-    elif platform.system() == "Linux":
+    if platform.system() == "Linux":
         pids = []
         for subdir in os.listdir('/proc'):
             if subdir.isdigit():
                 pids.append(subdir)
         process_count = len(pids)+1
+    elif platform.system() == "Darwin":
+        processoutput = subprocess.Popen(['launchctl', 'list'], stdout=subprocess.PIPE).stdout.read()
+        process_count = len((processoutput).split('\n')) - 1
     return process_count
 
 # CPU load averages
@@ -138,7 +181,10 @@ def cpu_percents(sample_duration=1):
     }
 
 def cpu_use():
-    if platform.system() == "Darwin":
+    if platform.system() == "Linux":
+        linux_cpu_use = cpu_percents()
+        return linux_cpu_use["user"], linux_cpu_use["system"], linux_cpu_use["idle"]
+    elif platform.system() == "Darwin":
         proc = subprocess.Popen(['/usr/bin/top', '-l', '1', '-n' '0'], shell=False, stdout=subprocess.PIPE)
         proc_comm = proc.communicate()[0]
         top_out = proc_comm.splitlines()[3][11:]
@@ -146,20 +192,12 @@ def cpu_use():
         system = top_out.split()[2]
         idle = top_out.split()[4]
         return user, system, idle
-    elif platform.system() == "Linux":
-        linux_cpu_use = cpu_percents()
-        return linux_cpu_use["user"], linux_cpu_use["system"], linux_cpu_use["idle"]
-#except:
-#    print "CPU STATISTICS UNKNOWN: the stsci_check_cpu script encountered an error."
-
 
 # Memory
-#memory_usag = psutil.phymem_usage()
-#mem = psutil.virtual_memory()
 ## If Linux
 # I got the getRAMinformations method from PhJulien's post
 # From here http://www.raspberrypi.org/phpBB3/viewtopic.php?f=32&t=22180
-# Return the RAM informations (unit=kb) in a list
+# Return the RAM information (unit=kb) in a list
 # Index 0: total RAM
 # Index 1: used RAM
 # Index 2: free RAM
@@ -168,17 +206,17 @@ def getRAMinformations():
     p = os.popen('free')
     i = 0
     while 1:
-        i = i + 1
+        i += 1
         line = p.readline()
-        if i==2:
-            return(line.split()[1:4])
+        if i == 2:
+            return line.split()[1:4]
 
-# Now, using the informations recevied from the getRAMinfo's method
+# Now, using the information received from the getRAMinfo's method
 # i build the getRAMpercentage method, so you can show the amount
 # of ram used in percentage
 
 def getRAMpercentage(total, used):
-    return((used * 100) / total)
+    return (used * 100) / total
 
 def linux_memory():
     infoRAM = getRAMinformations()
@@ -189,17 +227,11 @@ def linux_memory():
     return infoRAM, totalRAM, usedRAM, freeRAM, percentRAM
 
 if platform.system() == "Linux":
-    memory = linux_memory()[1:3:1]
-#elif platform.system() == "Darwin":
-#    memory =
+    memory = linux_memory()[1:4:1]
+elif platform.system() == "Darwin":
+    memory = (0, 0, 0)
 
-#print memory_usag
-#print totalRAM
-#print usedRAM
-#print freeRAM
-#print "Used ram: " + str(round(percentRAM,2)) + "%" # we need only 2 decimals
-
-print "System hostname: %s (%s)" % (hostname, host_ip)
+print "System hostname: %s (%s)" % (hostname, get_lan_ip())
 print "Operating system: %s %s" % (os_name, os_ver)
 print "System architecture: %s" % arch
 print "Kernel and CPU: %s" % kernel_cpu
@@ -208,15 +240,4 @@ print "System uptime: %s" % system_uptime()
 print "Running processes: %s" % processes_numbers()
 print "CPU load averages: %.2f (1 min) %.2f (5 min) %.2f (15 min)" % (cpu_load_avg()[0], cpu_load_avg()[1], cpu_load_avg()[2])
 print "CPU usage: User %s, System %s, Idle %s" % (cpu_use())
-print "Memory: %s total, %s used" % memory
-
-
-
-#print mem.total/2**30
-
-#oss = os.uname()
-#oss2 = sys.platform
-#oss3 = platform.release() +" on "+ platform.processor()
-#oss4 = platform.machine()
-#oss5 = platform.system()
-#print oss5
+print "Memory: %s total, %s used, %s free" % memory
