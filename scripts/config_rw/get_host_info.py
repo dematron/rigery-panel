@@ -138,7 +138,6 @@ def cpu_load_avg():
     return load_avg
 
 # CPU usage
-#cpu_use = psutil.cpu_percent(interval=0)
 def __cpu_time_deltas(sample_duration):
     """Return a sequence of cpu time deltas for a sample period.
     Elapsed cpu time samples taken at 'sample_time (seconds)' apart.
