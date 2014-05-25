@@ -28,7 +28,17 @@
     <section class="content_section">
         <article>
             <header>
-                <h2>Welcome to rigery panel!</h2>
+                <h2>System information:</h2>
+                <p>System hostname: {{ hostname }} ({{ lan_ip }})</p>
+                <p>Operating system: {{ os_name }} {{ os_version }}</p>
+                <p>System architecture: {{ architecture }}</p>
+                <p>Kernel and CPU: {{ kernel_cpu }}</p>
+                <p>Processor information:{{ processor_info }} ({{ core_info }})</p>
+                <p>System uptime: {{ system_uptime }}</p>
+                <p>Running processes: {{ processes }}</p>
+                <p>CPU load averages: {{ cpu_load_avg_0 }} (1 min), {{ cpu_load_avg_1 }} (5 min), {{ cpu_load_avg_2 }} (15 min)</p>
+                <p>CPU usage: User {{ user }}, System {{ system }}, Idle {{ idle }}</p>
+                <p>Memory: {{ memory_total }} total, {{ memory_used }} used, {{ memory_free }} free</p>
             </header>
         </article>
     </section>

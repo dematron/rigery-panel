@@ -13,7 +13,8 @@ import sys
 import time
 
 # Name
-hostname = socket.gethostname()
+def get_hostname():
+    return socket.gethostname()
 
 # IP Address
 def get_interface_ip(ifname):
@@ -44,31 +45,36 @@ def get_lan_ip():
     return ip
 
 # OS
-os_name = platform.system()
-os_ver = ""
-os_ver_mac = platform.mac_ver()[0]
-if os_name == "Darwin":
-    os_ver = os_ver_mac
-    os_name = 'Mac OS'
-    if os_ver_mac >= "10.0":
-        os_name = "Mac OS X"
+def get_os_info():
+    os_name = platform.system()
+    os_ver = ""
+    os_ver_mac = platform.mac_ver()[0]
+    if os_name == "Darwin":
+        os_ver = os_ver_mac
+        os_name = 'Mac OS'
+        if os_ver_mac >= "10.0":
+            os_name = "Mac OS X"
 
-if os_name == "Linux":
-    os_name = platform.linux_distribution()[0]
-    if platform.linux_distribution()[2] != '':
-        os_ver = platform.linux_distribution()[1] + ' ' + '(' + platform.linux_distribution()[2] + ')'
-    else:
-        os_name = platform.linux_distribution()[1]
+    if os_name == "Linux":
+        os_name = platform.linux_distribution()[0]
+        if platform.linux_distribution()[2] != '':
+            os_ver = platform.linux_distribution()[1] + ' ' + '(' + platform.linux_distribution()[2] + ')'
+        else:
+            os_name = platform.linux_distribution()[1]
+    return {"os_name":os_name, "os_version":os_ver}
 
 # Arch
-if sys.maxsize > 2**32:
-    # check if arch is real 64-bit
-    arch = platform.machine()
-else:
-    arch = platform.machine()
+def get_arch():
+    if sys.maxsize > 2**32:
+        # check if arch is real 64-bit
+        arch = platform.machine()
+    else:
+        arch = platform.machine()
+    return arch
 
 # Kernel and CPU (real)
-kernel_cpu = platform.release() + " on " + platform.processor()
+def get_kernel_cpu():
+    return platform.release() + " on " + platform.processor()
 
 # Processor information
 def get_processor_info():
@@ -79,17 +85,20 @@ def get_processor_info():
         return subprocess.check_output(['/usr/sbin/sysctl', "-n", "machdep.cpu.brand_string"]).strip()
     elif platform.system() == "Windows":
         return platform.processor()
-    return ""
+    else:
+        return ""
 
 # Number of cores
-cores_number = multiprocessing.cpu_count()
-if cores_number > 1:
-    core = str(cores_number) + " cores"
-else:
-    core = str(cores_number) + " core"
+def get_core_info():
+    cores_number = multiprocessing.cpu_count()
+    if cores_number > 1:
+        core = str(cores_number) + " cores"
+    else:
+        core = str(cores_number) + " core"
+    return core
 
 # System uptime
-def system_uptime():
+def get_system_uptime():
     o = os.popen("uptime").read()
     if o.find("min") != -1:
         m = re.search("up ((\d+) min,)", o)
@@ -120,7 +129,7 @@ def system_uptime():
     return s
 
 # Number of running processes
-def processes_numbers():
+def get_processes_numbers():
     if platform.system() == "Linux":
         pids = []
         for subdir in os.listdir('/proc'):
@@ -133,7 +142,7 @@ def processes_numbers():
     return process_count
 
 # CPU load averages
-def cpu_load_avg():
+def get_cpu_load_avg():
     load_avg = os.getloadavg()
     return load_avg
 
@@ -179,10 +188,10 @@ def cpu_percents(sample_duration=1):
         'softirq': percents[6],
     }
 
-def cpu_use():
+def get_cpu_use():
     if platform.system() == "Linux":
         linux_cpu_use = cpu_percents()
-        return linux_cpu_use["user"], linux_cpu_use["system"], linux_cpu_use["idle"]
+        return {"user":linux_cpu_use["user"], "system":linux_cpu_use["system"], "idle":linux_cpu_use["idle"]}
     elif platform.system() == "Darwin":
         proc = subprocess.Popen(['/usr/bin/top', '-l', '1', '-n' '0'], shell=False, stdout=subprocess.PIPE)
         proc_comm = proc.communicate()[0]
@@ -190,7 +199,9 @@ def cpu_use():
         user = top_out.split()[0]
         system = top_out.split()[2]
         idle = top_out.split()[4]
-        return user, system, idle
+        return {"user":user, "system":system, "idle":idle}
+    else:
+        return {"user":"unknown", "system":"unknown", "idle":"unknown"}
 
 # Memory
 ## If Linux
@@ -225,18 +236,51 @@ def linux_memory():
     percentRAM = getRAMpercentage(totalRAM, usedRAM)
     return infoRAM, totalRAM, usedRAM, freeRAM, percentRAM
 
-if platform.system() == "Linux":
-    memory = linux_memory()[1:4:1]
-elif platform.system() == "Darwin":
-    memory = (0, 0, 0)
+def get_linux_memory():
+    if platform.system() == "Linux":
+        memory = linux_memory()[1:4:1]
+    elif platform.system() == "Darwin":
+        memory = (0, 0, 0)
+    result = {
+        "memory_total":memory[0],
+        "memory_used":memory[1],
+        "memory_free":memory[2]
+    }
+    return result
 
-print "System hostname: %s (%s)" % (hostname, get_lan_ip())
-print "Operating system: %s %s" % (os_name, os_ver)
-print "System architecture: %s" % arch
-print "Kernel and CPU: %s" % kernel_cpu
-print "Processor information: %s (%s)" % (get_processor_info(), core)
-print "System uptime: %s" % system_uptime()
-print "Running processes: %s" % processes_numbers()
-print "CPU load averages: %.2f (1 min) %.2f (5 min) %.2f (15 min)" % (cpu_load_avg()[0], cpu_load_avg()[1], cpu_load_avg()[2])
-print "CPU usage: User %s, System %s, Idle %s" % (cpu_use())
-print "Memory: %s total, %s used, %s free" % memory
+def get_host_info():
+    cpu_load_avg = get_cpu_load_avg()
+    host_info = {
+        "hostname" : get_hostname(),
+        "lan_ip" : get_lan_ip(),
+        "architecture" : get_arch(),
+        "kernel_cpu" : get_kernel_cpu(),
+        "processor_info" : get_processor_info(),
+        "core_info" : get_core_info(),
+        "system_uptime" : get_system_uptime(),
+        "processes" : get_processes_numbers(),
+        "cpu_load_avg_0" : cpu_load_avg[0],
+        "cpu_load_avg_1" : cpu_load_avg[1],
+        "cpu_load_avg_2" : cpu_load_avg[2],
+    }
+    host_info.update(get_linux_memory())
+    host_info.update(get_cpu_use())
+    host_info.update(get_os_info())
+    return host_info
+
+if __name__=="__main__":
+    cpu_use = get_cpu_use()
+    os_info = get_os_info()
+    memory = get_linux_memory()
+    print "System hostname: %s (%s)" % (get_hostname(), get_lan_ip())
+    print "Operating system: %s %s" % (os_info["os_name"], os_info["os_version"])
+    print "System architecture: %s" % get_arch()
+    print "Kernel and CPU: %s" % get_kernel_cpu()
+    print "Processor information: %s (%s)" % (get_processor_info(), get_core_info())
+    print "System uptime: %s" % get_system_uptime()
+    print "Running processes: %s" % get_processes_numbers()
+    print "CPU load averages: %.2f (1 min) %.2f (5 min) %.2f (15 min)" % (get_cpu_load_avg()[0], get_cpu_load_avg()[1], get_cpu_load_avg()[2])
+    print "CPU usage: User %s, System %s, Idle %s" % (cpu_use["user"], cpu_use["system"], cpu_use["idle"])
+    print "Memory: %s total, %s used, %s free" % (memory["memory_total"], memory["memory_used"], memory["memory_free"])
+
+    print get_host_info()

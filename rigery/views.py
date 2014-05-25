@@ -2,11 +2,12 @@ __author__ = 'kutepoval'
 
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import *
+import scripts.monitoring.get_host_info as host_info
 
 @login_required
 def test_nginx(request):
     return render_to_response("servers/nginx_configuration.html")
 
 @login_required
-def test_response(request):
-    return render_to_response("index.html")
+def start_page(request):
+    return render_to_response("index.html", host_info.get_host_info())
