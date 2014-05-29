@@ -13,133 +13,95 @@
     <section class="content_section">
         <article>
             <header>
-                <h2>nginx configuration:</h2>
+                <h2>NGINX configuration:</h2>
             </header>
+            <form id="nginx_config_form" action="saved/" method="post">
+            {% csrf_token %}
             <fieldset id="fieldset_main">
                 <legend>main</legend>
-                <p>user <input id="input_user" type="text">;</p>
-                <p>worker_processes <input id="input_worker_process" type="number" min="1" max="100">;</p>
-                <p>pid <input id="input_pid" type="text">;</p>
-                <p>error_log <input id="input_error_log" type="text">; #/path/to/log log_level; log_level like [ debug | info | notice | warn | error | crit ]</p>
+                    <p><b>user </b><input id="input_user" type="text">;</p>
+                    <p><b>worker_processes </b><input id="input_worker_process" type="number" min="1" max="100">;</p>
+                    <p><b>worker_rlimit_nofile </b><input id="input_worker_rlimit_nofile" type="text">;</p>
+                    <p><b>pid </b><input id="input_pid" type="text">;</p>
+                    <p><b>error_log </b><input id="input_error_log" type="text">;</p>
+
                 <details id="details_events" class="details">
                     <summary>events</summary>
-                    <p>connections <input id="input_connections" type="number" min="1" max="10000">;</p>
-                    <p>use <input id="input_use" type="text">; # use [ kqueue | rtsig | epoll | /dev/poll | select | poll ];</p>
+                        <p></p><b>connections</b><input id="input_connections" type="number" min="1" max="10000">;</p>
+                        <p>
+                            <b>use</b>
+                            <input type="radio" name="use_item" value="kqueue">kqueue
+                            <input type="radio" name="use_item" value="rtsig">rtsig
+                            <input type="radio" name="use_item" value="epoll">epoll
+                            <input type="radio" name="use_item" value="/dev/poll">/dev/poll
+                            <input type="radio" name="use_item" value="select">select
+                            <input type="radio" name="use_item" value="poll">poll;
+                        </p>
                 </details>
                 <details id="details_http" class="details">
                     <summary>http</summary>
-                    <p>include <input id="input_include" type="text">;</p>
-                    <p>default_type <input id="input_default_type" type="text">;</p>
-                    <p>log_format <input id="input_log_format" type="text"></p> {# может быть несколько #}
+                    <p><b>include</b> /etc/nginx/mime.types; <input type="checkbox" name="input_include_types" value="include_types"> </p>
+                    <p><b>include</b> /etc/nginx/conf.d/*.conf; <input type="checkbox" name="input_include_conf" value="include_types"> </p>
+                    <p><b>default_type</b> <input id="input_default_type" type="text">;</p>
+                    <p><b>log_format</b> <input id="input_log_format" type="text"></p> {# может быть несколько #}
                     <textarea id="textarea_log_format" cols="50" rows="4"></textarea>;
-                    <p>client_header_timeout <input id="input_client_header_timeout" type="text">;</p>
-                    <p>client_body_timeout <input id="input_client_body_timeout" type="text">;</p>
-                    <p>send_timeout <input id="input_send_timeout" type="text">;</p>
-                    <p>client_header_buffer_size <input id="input_client_header_buffer_size" type="text">;</p>
-                    <p>large_client_header_buffers <input id="input_large_client_header_buffers" type="text">;</p>
-                    <p>gzip
-                        <select id="select_gzip">
-                            <option></option>
-                            <option>on</option>
-                            <option>off</option>
-                        </select>;
-                    </p>
-                    <p>gzip_min_length <input id="input_gzip_min_length" type="number" min="1">;</p>
-                    <p>gzip_buffers <input id="input_gzip_buffers" type="text">;</p>
-                    <p>gzip_types <input id="input_gzip_types" type="text">;</p>
-                    <p>output_buffers <input id="input_output_buffers" type="text">;</p>
-                    <p>postpone_output <input id="input_postpone_output" type="text">;</p>
-                    <p>sendfile
-                        <select id="select_sendfile">
-                            <option></option>
-                            <option>on</option>
-                            <option>off</option>
-                        </select>;
-                    </p>
-                    <p>tcp_nopush
-                        <select id="select_tcp_nopush">
-                            <option></option>
-                            <option>on</option>
-                            <option>off</option>
-                        </select>;
-                    </p>
-                    <p>tcp_nodelay
-                        <select id="select_tcp_nodelay">
-                            <option></option>
-                            <option>on</option>
-                            <option>off</option>
-                        </select>;
-                    </p>
-                    <p>send_lowat <input id="input_send_lowat" type="number" min="1">;</p>
-                    <p>keepalive_timeout <input id="input_keepalive_timeout" type="text">;</p>
-                    <p>lingering_time <input id="input_lingering_time" type="number" min="1">;</p>
-                    <p>lingering_timeout <input id="input_lingering_timeout" type="number" min="1">;</p>
-                    <p>treset_timedout_connection
-                        <select id="select_reset_timedout_connection">
-                            <option></option>
-                            <option>on</option>
-                            <option>off</option>
-                        </select>;
-                    </p>
+                    <p><b>sendfile </b><input type="checkbox" name="input_sendfile" value="on">;</p>
+                    <p><b>tcp_nopush </b><input type="checkbox" name="input_tcp_nopush" value="on">;</p>
+                    <p><b>tcp_nodelay </b><input type="checkbox" name="input_tcp_nodelay" value="on">;</p>
+                    <p><b>server_tokens </b><input type="checkbox" name="input_server_tokens" value="on">;</p>
+                    <p><b>gzip </b><input type="checkbox" name="input_gzip" value="on">;</p>
+                    <p><b>gzip_static </b><input type="checkbox" name="input_gzip_static" value="on">;</p>
+                    <p><b>gzip_vary </b><input type="checkbox" name="input_gzip_vary" value="on">;</p>
+                    <p><b>gzip_comp_level </b><input name="input_gzip_comp_level" type="number" min="0" max="9">;</p>
+                    <p><b>gzip_min_length </b><input name="input_gzip_min_length" type="number" min="0" max="100000">;</p>
+                    <p><b>gzip_proxied</b><input id="input_gzip_proxied" type="text">;</p>
+                    <p><b>gzip_types</b><input id="input_gzip_types" type="text">;</p>
+                    <p><b>gzip_http_version</b><input id="input_gzip_http_version" type="text">;</p>
+                    <p><b>gzip_disable</b><input id="input_gzip_disable" type="text">;</p>
+                    <p><b>keepalive_timeout</b><input id="input_keepalive_timeout" type="text">;</p>
+                    <p><b>limit_conn_zone</b><input id="input_limit_conn_zone" type="text">;</p>
+
                     <a href="#" onclick="createServer(this.parentNode);" class="button_add">add server</a>
                     <details id="details_server" name="details_server" class="details">
                         <summary>server</summary>
                         <a href="#" onclick="deleteServer(this.parentNode);" class="button_delete">delete</a>
-                        <p>listen <input id="input_listen" type="text">;</p>
-                        <p>server_name <input id="input_server_name" type="text">;</p>
-                        <p>access_log <input id="input_access_log" type="text">;</p>
-                        <p>error_page <input id="input_error_page" type="text">;</p>
+                        <p><b>server_name</b> <input id="input_server_name" type="text">;</p>
+                        <p><b>listen</b> <input id="input_listen" type="text">;</p>
+                        <p><b>disable_symlinks</b> <input id="input_disable_symlinks" type="text">;</p>
+                        <p><b>access_log</b> <input id="input_access_log" type="text">;</p>
+                        <p><b>index</b> <input id="input_index_page" type="text">;</p>
+                        <p><b>error_page</b> <input id="input_error_page" type="text">;</p>
+                        <p><b>set</b> <input id="input_set_path" type="text">;</p>
+                        <p><b>include</b> /usr/local/ispmgr/etc/nginx.inc;<input id="input_include_nginx_inc" type="checkbox" value="on"></p>
                         <a href="#" onclick="createLocation(this.parentNode,this);" class="button_add">add location here</a>
                         <details id="details_location" class="details">
                             <summary>location</summary>
                             <a href="#" onclick="deleteLocation(this.parentNode);" class="button_delete">delete</a>
-                            <p>location <input id="input_location" type="text"></p>
-                            <p>proxy_pass <input id="input_proxy_pass" type="text">;</p>
-                            <p>proxy_redirect
-                            <select id="select_proxy_redirect">
-                                <option></option>
-                                <option>on</option>
-                                <option>off</option>
-                            </select>;
-                            </p>
-                            <p>proxy_set_header <input id="input_proxy_set_header" type="text">;</p> {# может быть несколько #}
-                            <p>client_max_body_size <input id="input_client_max_body_size" type="text">;</p>
-                            <p>client_body_buffer_size <input id="input_client_body_buffer_size" type="text">;</p>
-                            <p>client_body_temp_path <input id="input_client_client_body_temp_path" type="text">;</p>
-                            <p>proxy_connect_timeout <input id="input_proxy_connect_timeout" type="number" min="1">;</p>
-                            <p>proxy_send_timeout <input id="input_proxy_send_timeout" type="number" min="1">;</p>
-                            <p>proxy_read_timeout <input id="input_proxy_read_timeout" type="number" min="1">;</p>
-                            <p>proxy_send_lowat <input id="input_proxy_send_lowat" type="number" min="1">;</p>
-                            <p>proxy_buffer_size <input id="input_proxy_buffer_size" type="text">;</p>
-                            <p>proxy_buffers <input id="input_proxy_buffers" type="text">;</p>
-                            <p>proxy_busy_buffers_size <input id="input_proxy_busy_buffers_size" type="text">;</p>
-                            <p>proxy_temp_file_write_size <input id="input_proxy_temp_file_write_size" type="text">;</p>
-                            <p>proxy_temp_path <input id="input_proxy_temp_path" type="text">;</p>
-                            <p>valid_referers <input id="input_valid_referers" type="text">;</p>
-                            <p>root <input id="input_root" type="text">;</p>
-                            <p>rewrite <input id="input_rewrite" type="text">;</p>
-                            <p>charset <input id="input_charset" type="text">;</p>
-                            <p>source_charset <input id="input_source_charset" type="text">;</p>
-                            <p>autoindex
-                            <select id="select_autoindex">
-                                <option></option>
-                                <option>on</option>
-                                <option>off</option>
-                            </select>;
-                            </p>
-                            <p>access_log
-                            <select id="select_access_log">
-                                <option></option>
-                                <option>on</option>
-                                <option>off</option>
-                            </select>;
-                            </p>
-                            <p>expires <input id="input_expires" type="text">;</p>
+                            <p><b>location</b> <input id="input_location" type="text"></p>
+                            <p><b>root</b> <input id="input_root" type="text">;</p>
+                            <p><b>access_log</b> <input id="input_location_access_log" type="checkbox" value="on">;</p>
+                            <p><b>error_page</b> <input id="input_location_error_page" type="text">;</p>
+                            <p><b>proxy_pass</b> <input id="input_proxy_pass" type="text">;</p>
+                            <p><b>proxy_redirect</b> <input id="proxy_redirect" type="checkbox" value="on">;</p>
+                            <p><b>proxy_set_header</b> <input id="input_proxy_set_header" type="text">;</p> {# несколько штук #}
+                            <p><b>proxy_connect_timeout</b> <input id="input_proxy_connect_timeout" type="number" min="1">;</p>
+                            <p><b>proxy_send_timeout</b> <input id="input_proxy_send_timeout" type="number" min="1">;</p>
+                            <p><b>proxy_read_timeout</b> <input id="input_proxy_read_timeout" type="number" min="1">;</p>
+                            <p><b>expires</b> <input id="input_expires" type="text">;</p>
                         </details>
                         <a href="#" onclick="createLocation(this.parentNode, this);" class="button_add">add location here</a>
                     </details>
                 </details>
             </fieldset>
+
+            <table class="center">
+                <tr>
+                    <td><a href="#" onclick="" class="button_save_cancel">cancel</a></td>
+                    <td><a href="#" onclick="document.getElementById('nginx_config_form').submit(); return false;" class="button_save_cancel">save</a></td>
+                </tr>
+            </table>
+
+            </form>
         </article>
     </section>
 {% endblock %}
