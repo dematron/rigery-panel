@@ -1,4 +1,4 @@
 rigery
 ======
 
-Web-panel
+Web-based interface for system administration for Linux
