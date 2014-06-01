@@ -44,11 +44,12 @@ function prepareData() {
     var result = {"a":"a", "b":"b"};
     result.h = "h";
     var object = document.getElementById('details_location');
+    key = object.id;
+    result[key] = object.id;
     for (var childItem in object.childNodes) {
         var key = childItem.id;
         result[key] = childItem.id;
     }
-
 
 
     $.ajax({

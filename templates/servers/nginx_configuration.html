@@ -19,11 +19,11 @@
             {% csrf_token %}
             <fieldset id="fieldset_main">
                 <legend>main</legend>
-                    <p><b>user </b><input id="input_user" type="text">;</p>
-                    <p><b>worker_processes </b><input id="input_worker_process" type="number" min="1" max="100">;</p>
-                    <p><b>worker_rlimit_nofile </b><input id="input_worker_rlimit_nofile" type="text">;</p>
-                    <p><b>pid </b><input id="input_pid" type="text">;</p>
-                    <p><b>error_log </b><input id="input_error_log" type="text">;</p>
+                    <p><b>user </b><input id="input_user" type="text" value="{{ user }}">;</p>
+                    <p><b>worker_processes </b><input id="input_worker_process" type="number" min="1" max="100" value="{{ worker_processes }}">;</p>
+                    <p><b>worker_rlimit_nofile </b><input id="input_worker_rlimit_nofile" type="text" {{ worker_rlimit_nofile }}>;</p>
+                    <p><b>pid </b><input id="input_pid" type="text" value="{{ pid }}">;</p>
+                    <p><b>error_log </b><input id="input_error_log" type="text" value="{{ error_log }}">;</p>
 
                 <details id="details_events" class="details">
                     <summary>events</summary>

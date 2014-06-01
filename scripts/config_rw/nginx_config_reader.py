@@ -17,15 +17,15 @@ class NginxConfigReader:
         while index < len(config):
             buffer += config[index]
             item = {}
-            if self.pattern_ignore.match(buffer):
+            if self.pattern_ignore.match(buffer): #pattern_ignore
                 buffer = ""
                 continue
-            elif self.pattern_easy.match(buffer):
+            elif self.pattern_easy.match(buffer): #pattern_easy
                 buffer = buffer.strip()
                 item[buffer.split()[0]] = ' '.join(buffer.split()[1:])[:-1]
                 result.append(item)
                 buffer = ""
-            elif self.pattern_block.match(buffer):
+            elif self.pattern_block.match(buffer): #pattern_block
                 index += 1
                 response = self.config_handler(config, index)
                 buffer = buffer.strip()
@@ -33,7 +33,7 @@ class NginxConfigReader:
                 result.append(item)
                 index = response[1]
                 buffer = ""
-            elif self.pattern_block_end.match(buffer):
+            elif self.pattern_block_end.match(buffer): #pattern_block_end
                 return [result, index+1]
             index += 1
         return [result, index]
