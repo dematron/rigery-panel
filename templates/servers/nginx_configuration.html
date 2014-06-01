@@ -8,6 +8,7 @@
 {% block scripts %}
     {% load staticfiles %}
     <script src="{% static "scripts/servers/nginx_configuration_script.js" %}"></script>
+    <script src="{% static "scripts/jquery/jquery-1.11.1.js" %}"></script>
 {% endblock %}
 {% block content %}
     <section class="content_section">
@@ -15,7 +16,6 @@
             <header>
                 <h2>NGINX configuration:</h2>
             </header>
-            <form id="nginx_config_form" action="saved/" method="post">
             {% csrf_token %}
             <fieldset id="fieldset_main">
                 <legend>main</legend>
@@ -96,12 +96,10 @@
 
             <table class="center">
                 <tr>
-                    <td><a href="#" onclick="" class="button_save_cancel">cancel</a></td>
-                    <td><a href="#" onclick="document.getElementById('nginx_config_form').submit(); return false;" class="button_save_cancel">save</a></td>
+                    <td><a href="" onclick="" class="button_save_cancel">cancel</a></td>
+                    <td><a onclick="prepareData();" class="button_save_cancel">save</a></td>
                 </tr>
             </table>
-
-            </form>
         </article>
     </section>
 {% endblock %}

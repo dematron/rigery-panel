@@ -42,12 +42,14 @@ def get_all_group_members(gid):
 # Use of dictionary get_group_info()
 # get_groups().keys() - groups
 # get_groups()['GROUP'] - GID
-#print get_groups()
+
 
 # Use of dictionary get_users()
 # get_users().keys() - users
 # get_users()['USERNAME'] - user info
 # get_users()['USERNAME'][0-3] - User, UID, Home Dir, Description
-#print get_users()
 
-#print get_all_group_members(0)
+if __name__=="__main__":
+    print get_groups()
+    print get_users()
+    print get_all_group_members(0)
