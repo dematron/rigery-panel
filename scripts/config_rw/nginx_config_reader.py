@@ -13,24 +13,23 @@ class NginxConfigReader:
 
     def config_handler(self, config, index=0):
         buffer = ""
-        result = []
+        result = {}
         while index < len(config):
             buffer += config[index]
-            item = {}
             if self.pattern_ignore.match(buffer): #pattern_ignore
                 buffer = ""
                 continue
             elif self.pattern_easy.match(buffer): #pattern_easy
                 buffer = buffer.strip()
-                item[buffer.split()[0]] = ' '.join(buffer.split()[1:])[:-1]
-                result.append(item)
+                result[buffer.split()[0]] = ' '.join(buffer.split()[1:])[:-1]
+                #result.append(item)
                 buffer = ""
             elif self.pattern_block.match(buffer): #pattern_block
                 index += 1
                 response = self.config_handler(config, index)
                 buffer = buffer.strip()
-                item[' '.join(buffer.split()[0:-1])] = response[0]
-                result.append(item)
+                result[' '.join(buffer.split()[0:-1])] = response[0]
+                #result.append(item)
                 index = response[1]
                 buffer = ""
             elif self.pattern_block_end.match(buffer): #pattern_block_end

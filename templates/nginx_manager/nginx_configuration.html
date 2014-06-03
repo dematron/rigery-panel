@@ -1,0 +1,166 @@
+{% extends "index.html" %}
+{% block style %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "css/index.css" %}" />
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "css/nginx_manager/nginx_configuration.css" %}" />
+{% endblock %}
+{% block scripts %}
+    {% load staticfiles %}
+    <script src="{% static "scripts/nginx_manager/nginx_configuration_script.js" %}"></script>
+    <script src="{% static "scripts/jquery/jquery-1.11.1.js" %}"></script>
+{% endblock %}
+{% block content %}
+    <section class="content_section">
+        <article>
+            <header>
+                <h2>NGINX configuration:</h2>
+            </header>
+            {% csrf_token %}
+            <fieldset id="fieldset_main">
+                <legend>main</legend>
+                    <p><b>user </b><input id="input_user" type="text" value="{{ user }}">;</p>
+                    <p><b>worker_processes </b><input id="input_worker_process" type="number" min="1" max="100" value="{{ worker_processes }}">;</p>
+                    <p><b>worker_rlimit_nofile </b><input id="input_worker_rlimit_nofile" type="text" {{ worker_rlimit_nofile }}>;</p>
+                    <p><b>pid </b><input id="input_pid" type="text" value="{{ pid }}">;</p>
+                    <p><b>error_log </b><input id="input_error_log" type="text" value="{{ error_log }}">;</p>
+
+{#       block events         #}
+                <details id="details_events" class="details">
+                    <summary>events</summary>
+                        <p></p><b>connections</b><input id="input_connections" type="number" min="1" max="10000" value="{{ events.connections }}">;</p>
+                        <p></p><b>worker_connections</b><input id="input_worker_connections" type="number" min="1" max="10000" value="{{ events.worker_connections }}">;</p>
+                        <p>
+                            <b>use</b>
+                            {% if "kqueue" in events.use %}
+                                <input type="radio" name="use_item" value="kqueue" checked>kqueue
+                            {% else %}
+                                <input type="radio" name="use_item" value="kqueue">kqueue
+                            {% endif %}
+                            {% if "rtsig" in events.use %}
+                                <input type="radio" name="use_item" value="rtsig" checked>rtsig
+                            {% else %}
+                                <input type="radio" name="use_item" value="rtsig">rtsig
+                            {% endif %}
+                            {% if "epoll" in events.use %}
+                                <input type="radio" name="use_item" value="epoll" checked>epoll
+                            {% else %}
+                                <input type="radio" name="use_item" value="epoll">epoll
+                            {% endif %}
+                            {% if "/dev/poll" in events.use %}
+                                <input type="radio" name="use_item" value="/dev/poll" checked>/dev/poll
+                            {% else %}
+                                <input type="radio" name="use_item" value="/dev/poll">/dev/poll
+                            {% endif %}
+                            {% if "select" in events.use %}
+                                <input type="radio" name="use_item" value="select" checked>select
+                            {% else %}
+                                <input type="radio" name="use_item" value="select">select
+                            {% endif %}
+                            {% if "poll" in events.use %}
+                                <input type="radio" name="use_item" value="poll" checked>poll;
+                            {% else %}
+                                <input type="radio" name="use_item" value="poll">poll;
+                            {% endif %}
+                        </p>
+                </details>
+{#     block http       #}
+                <details id="details_http" class="details">
+                    <summary>http</summary>
+                    {% if http.include %}
+                        <p><b>include</b> /etc/nginx/mime.types; <input type="checkbox" name="input_include_types" value="include_types" checked> </p>
+                    {% else %}
+                        <p><b>include</b> /etc/nginx/mime.types; <input type="checkbox" name="input_include_types" value="include_types"> </p>
+                    {% endif %}
+{# TODO need add include on the page  #}
+                    {#                    <p><b>include</b> /etc/nginx/conf.d/*.conf; <input type="checkbox" name="input_include_conf" value="include_types"> </p>#}
+                    <p><b>default_type</b> <input id="input_default_type" type="text" value="{{ http.default_type }}">;</p>
+{# TODO need add log_format on the page #}
+{#                    <p><b>log_format</b> <input id="input_log_format" type="text"></p> {# может быть несколько #}
+{#                    <textarea id="textarea_log_format" cols="50" rows="4"></textarea>;#}
+                    {% if http.sendfile %}
+                        <p><b>sendfile </b><input type="checkbox" name="input_sendfile" value="on" checked>;</p>
+                    {% else %}
+                        <p><b>sendfile </b><input type="checkbox" name="input_sendfile" value="on">;</p>
+                    {% endif %}
+                    {% if http.tcp_nopush %}
+                        <p><b>tcp_nopush </b><input type="checkbox" name="input_tcp_nopush" value="on" checked>;</p>
+                    {% else %}
+                        <p><b>tcp_nopush </b><input type="checkbox" name="input_tcp_nopush" value="on">;</p>
+                    {% endif %}
+                    {% if http.tcp_nodelay %}
+                        <p><b>tcp_nodelay </b><input type="checkbox" name="input_tcp_nodelay" value="on" checked>;</p>
+                    {% else %}
+                        <p><b>tcp_nodelay </b><input type="checkbox" name="input_tcp_nodelay" value="on">;</p>
+                    {% endif %}
+                    {% if http.server_tokens %}
+                        <p><b>server_tokens </b><input type="checkbox" name="input_server_tokens" value="on" checked>;</p>
+                    {% else %}
+                        <p><b>server_tokens </b><input type="checkbox" name="input_server_tokens" value="on">;</p>
+                    {% endif %}
+                    {% if http.gzip %}
+                        <p><b>gzip </b><input type="checkbox" name="input_gzip" value="on" checked>;</p>
+                    {% else %}
+                        <p><b>gzip </b><input type="checkbox" name="input_gzip" value="on">;</p>
+                    {% endif %}
+                    {% if http.gzip_static %}
+                        <p><b>gzip_static </b><input type="checkbox" name="input_gzip_static" value="on" checked>;</p>
+                    {% else %}
+                        <p><b>gzip_static </b><input type="checkbox" name="input_gzip_static" value="on">;</p>
+                    {% endif %}
+                    {%  if http.gzip_vary %}
+                        <p><b>gzip_vary </b><input type="checkbox" name="input_gzip_vary" value="on" checked>;</p>
+                    {% else %}
+                        <p><b>gzip_vary </b><input type="checkbox" name="input_gzip_vary" value="on">;</p>
+                    {% endif %}
+                    <p><b>gzip_comp_level </b><input name="input_gzip_comp_level" type="number" min="0" max="9" value="{{ http.gzip_comp_level }}">;</p>
+                    <p><b>gzip_min_length </b><input name="input_gzip_min_length" type="number" min="0" max="100000" value="{{ http.gzip_min_length }}">;</p>
+                    <p><b>gzip_proxied</b><input id="input_gzip_proxied" type="text" value="{{ http.gzip_proxied }}">;</p>
+                    <p><b>gzip_types</b><input id="input_gzip_types" type="text" value="{{ http.gzip_types }}">;</p>
+                    <p><b>gzip_http_version</b><input id="input_gzip_http_version" type="text" value="{{ http.gzip_http_version }}">;</p>
+                    <p><b>gzip_disable</b><input id="input_gzip_disable" type="text" value="{{ http.gzip_disable }}">;</p>
+                    <p><b>keepalive_timeout</b><input id="input_keepalive_timeout" type="text" value="{{ http.keepalive_timeout }}">;</p>
+                    <p><b>limit_conn_zone</b><input id="input_limit_conn_zone" type="text" value="{{ http.limit_conn_zone }}">;</p>
+
+                    <a href="#" onclick="createServer(this.parentNode);" class="button_add">add server</a>
+                    <details id="details_server" name="details_server" class="details">
+                        <summary>server</summary>
+                        <a href="#" onclick="deleteServer(this.parentNode);" class="button_delete">delete</a>
+                        <p><b>server_name</b> <input id="input_server_name" type="text">;</p>
+                        <p><b>listen</b> <input id="input_listen" type="text">;</p>
+                        <p><b>disable_symlinks</b> <input id="input_disable_symlinks" type="text">;</p>
+                        <p><b>access_log</b> <input id="input_access_log" type="text">;</p>
+                        <p><b>index</b> <input id="input_index_page" type="text">;</p>
+                        <p><b>error_page</b> <input id="input_error_page" type="text">;</p>
+                        <p><b>set</b> <input id="input_set_path" type="text">;</p>
+                        <p><b>include</b> /usr/local/ispmgr/etc/nginx.inc;<input id="input_include_nginx_inc" type="checkbox" value="on"></p>
+                        <a href="#" onclick="createLocation(this.parentNode,this);" class="button_add">add location here</a>
+                        <details id="details_location" class="details">
+                            <summary>location</summary>
+                            <a href="#" onclick="deleteLocation(this.parentNode);" class="button_delete">delete</a>
+                            <p><b>location</b> <input id="input_location" type="text"></p>
+                            <p><b>root</b> <input id="input_root" type="text">;</p>
+                            <p><b>access_log</b> <input id="input_location_access_log" type="checkbox" value="on">;</p>
+                            <p><b>error_page</b> <input id="input_location_error_page" type="text">;</p>
+                            <p><b>proxy_pass</b> <input id="input_proxy_pass" type="text">;</p>
+                            <p><b>proxy_redirect</b> <input id="proxy_redirect" type="checkbox" value="on">;</p>
+                            <p><b>proxy_set_header</b> <input id="input_proxy_set_header" type="text">;</p> {# несколько штук #}
+                            <p><b>proxy_connect_timeout</b> <input id="input_proxy_connect_timeout" type="number" min="1">;</p>
+                            <p><b>proxy_send_timeout</b> <input id="input_proxy_send_timeout" type="number" min="1">;</p>
+                            <p><b>proxy_read_timeout</b> <input id="input_proxy_read_timeout" type="number" min="1">;</p>
+                            <p><b>expires</b> <input id="input_expires" type="text">;</p>
+                        </details>
+                        <a href="#" onclick="createLocation(this.parentNode, this);" class="button_add">add location here</a>
+                    </details>
+                </details>
+            </fieldset>
+
+            <table class="center">
+                <tr>
+                    <td><a href="" onclick="" class="button_save_cancel">cancel</a></td>
+                    <td><a onclick="prepareData();" class="button_save_cancel">save</a></td>
+                </tr>
+            </table>
+        </article>
+    </section>
+{% endblock %}
