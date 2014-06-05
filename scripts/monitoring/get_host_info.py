@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# coding=utf-8
+
 __author__ = 'iLiKo'
 
 import fcntl
@@ -240,7 +242,9 @@ def get_linux_memory():
     if platform.system() == "Linux":
         memory = linux_memory()[1:4:1]
     elif platform.system() == "Darwin":
-        memory = (0, 0, 0)
+        memory = ("unknown", "unknown", "unknown")
+    else:
+        memory = ("unknown", "unknown", "unknown")
     result = {
         "memory_total":memory[0],
         "memory_used":memory[1],

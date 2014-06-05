@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding=utf-8
 
 """
 This class contains some methods for reading and parsing file "nginx.conf".

@@ -1,6 +1,7 @@
-__author__ = 'iLiKo'
-
 #!/usr/bin/env python
+# coding=utf-8
+
+__author__ = 'iLiKo'
 
 """
 Return disk usage statistics about the given path as a (total, used, free).
