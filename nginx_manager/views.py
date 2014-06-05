@@ -16,6 +16,8 @@ def load_config():
         return [-1, None]
     else:
         block_main = result["main"]
+        if "server" not in block_main["http"].keys():
+            block_main["http"]["server"] = [{},]
         return [0, block_main]
 
 @login_required

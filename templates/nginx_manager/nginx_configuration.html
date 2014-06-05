@@ -123,35 +123,39 @@
                     <p><b>limit_conn_zone</b><input id="input_limit_conn_zone" type="text" value="{{ http.limit_conn_zone }}">;</p>
 
                     <a href="#" onclick="createServer(this.parentNode);" class="button_add">add server</a>
-                    <details id="details_server" name="details_server" class="details">
-                        <summary>server</summary>
-                        <a href="#" onclick="deleteServer(this.parentNode);" class="button_delete">delete</a>
-                        <p><b>server_name</b> <input id="input_server_name" type="text">;</p>
-                        <p><b>listen</b> <input id="input_listen" type="text">;</p>
-                        <p><b>disable_symlinks</b> <input id="input_disable_symlinks" type="text">;</p>
-                        <p><b>access_log</b> <input id="input_access_log" type="text">;</p>
-                        <p><b>index</b> <input id="input_index_page" type="text">;</p>
-                        <p><b>error_page</b> <input id="input_error_page" type="text">;</p>
-                        <p><b>set</b> <input id="input_set_path" type="text">;</p>
-                        <p><b>include</b> /usr/local/ispmgr/etc/nginx.inc;<input id="input_include_nginx_inc" type="checkbox" value="on"></p>
-                        <a href="#" onclick="createLocation(this.parentNode,this);" class="button_add">add location here</a>
-                        <details id="details_location" class="details">
-                            <summary>location</summary>
-                            <a href="#" onclick="deleteLocation(this.parentNode);" class="button_delete">delete</a>
-                            <p><b>location</b> <input id="input_location" type="text"></p>
-                            <p><b>root</b> <input id="input_root" type="text">;</p>
-                            <p><b>access_log</b> <input id="input_location_access_log" type="checkbox" value="on">;</p>
-                            <p><b>error_page</b> <input id="input_location_error_page" type="text">;</p>
-                            <p><b>proxy_pass</b> <input id="input_proxy_pass" type="text">;</p>
-                            <p><b>proxy_redirect</b> <input id="proxy_redirect" type="checkbox" value="on">;</p>
-                            <p><b>proxy_set_header</b> <input id="input_proxy_set_header" type="text">;</p> {# несколько штук #}
-                            <p><b>proxy_connect_timeout</b> <input id="input_proxy_connect_timeout" type="number" min="1">;</p>
-                            <p><b>proxy_send_timeout</b> <input id="input_proxy_send_timeout" type="number" min="1">;</p>
-                            <p><b>proxy_read_timeout</b> <input id="input_proxy_read_timeout" type="number" min="1">;</p>
-                            <p><b>expires</b> <input id="input_expires" type="text">;</p>
+                    {% for item in http.server %}
+                        <details id="details_server" name="details_server" class="details">
+                            <summary>server</summary>
+                            <a href="#" onclick="deleteServer(this.parentNode);" class="button_delete">delete</a>
+                            <p><b>server_name</b> <input id="input_server_name" type="text" value="{{ item.server_name }}">;</p>
+                            <p><b>listen</b> <input id="input_listen" type="text" value="{{ item.listen }}">;</p>
+                            <p><b>disable_symlinks</b> <input id="input_disable_symlinks" type="text" value="{{ item.disable_symlinks }}">;</p>
+                            <p><b>access_log</b> <input id="input_access_log" type="text" value="{{ item.access_log }}">;</p>
+                            <p><b>index</b> <input id="input_index_page" type="text" value="{{ item.index }}">;</p>
+                            <p><b>error_page</b> <input id="input_error_page" type="text" value="{{ item.error_page }}">;</p>
+                            <p><b>set</b> <input id="input_set_path" type="text" value="{{ item.set }}">;</p>
+{#            TODO need to add parameter include                #}
+{#                            <p><b>include</b> /usr/local/ispmgr/etc/nginx.inc;<input id="input_include_nginx_inc" type="checkbox" value="on"></p>#}
+
+                            <a href="#" onclick="createLocation(this.parentNode,this);" class="button_add">add location here</a>
+                            <details id="details_location" class="details">
+                                <summary>location</summary>
+                                <a href="#" onclick="deleteLocation(this.parentNode);" class="button_delete">delete</a>
+                                <p><b>location</b> <input id="input_location" type="text"></p>
+                                <p><b>root</b> <input id="input_root" type="text">;</p>
+                                <p><b>access_log</b> <input id="input_location_access_log" type="checkbox" value="on">;</p>
+                                <p><b>error_page</b> <input id="input_location_error_page" type="text">;</p>
+                                <p><b>proxy_pass</b> <input id="input_proxy_pass" type="text">;</p>
+                                <p><b>proxy_redirect</b> <input id="proxy_redirect" type="checkbox" value="on">;</p>
+                                <p><b>proxy_set_header</b> <input id="input_proxy_set_header" type="text">;</p> {# несколько штук #}
+                                <p><b>proxy_connect_timeout</b> <input id="input_proxy_connect_timeout" type="number" min="1">;</p>
+                                <p><b>proxy_send_timeout</b> <input id="input_proxy_send_timeout" type="number" min="1">;</p>
+                                <p><b>proxy_read_timeout</b> <input id="input_proxy_read_timeout" type="number" min="1">;</p>
+                                <p><b>expires</b> <input id="input_expires" type="text">;</p>
+                            </details>
+                            <a href="#" onclick="createLocation(this.parentNode, this);" class="button_add">add location here</a>
                         </details>
-                        <a href="#" onclick="createLocation(this.parentNode, this);" class="button_add">add location here</a>
-                    </details>
+                    {% endfor %}
                 </details>
             </fieldset>
 
