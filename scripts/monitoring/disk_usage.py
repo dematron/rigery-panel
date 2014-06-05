@@ -11,19 +11,16 @@ Values are expressed in bytes.
 import os
 import collections
 
-get_linux_diskusage = collections.namedtuple('usage', 'total used free')
-
-if hasattr(os, 'statvfs'):  # POSIX
-    def disk_usage(path):
+def get_linux_disk_usage(path):
+    if hasattr(os, 'statvfs'):  # POSIX
+        linux_diskusage = collections.namedtuple('usage', 'total used free')
         st = os.statvfs(path)
         free = st.f_bavail * st.f_frsize
         total = st.f_blocks * st.f_frsize
         used = (st.f_blocks - st.f_bfree) * st.f_frsize
-        return get_linux_diskusage(total, used, free)
-else:
-    raise NotImplementedError("platform not supported")
-
-#disk_usage.__doc__ = __doc__
+        return linux_diskusage(total, used, free)
+    else:
+        raise NotImplementedError("platform not supported")
 
 def bytes2human(n):
     symbols = ('K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')
@@ -36,10 +33,10 @@ def bytes2human(n):
             return '%.1f%s' % (value, s)
     return "%sB" % n
 
-# Enter something like - "/" (with out ")
-path = raw_input("Enter the Volume path: ")
-
+# Usage example
 if __name__ == '__main__':
-    usage = disk_usage(path)
+    # Enter something like - "/" (with out ")
+    path = raw_input("Enter the Volume path: ")
+    usage = get_linux_disk_usage(path)
     print "HDD usage: Total: %s, Used: %s, Free: %s" % (bytes2human(usage.total), bytes2human(usage.used),
                                                         bytes2human(usage.free))
