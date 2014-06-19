@@ -44,17 +44,23 @@ class NginxConfigReader:
 #               If the resulting dictionary contains the specified key,
 #               it is necessary that key value stored in the list.
 
-                if key in result:
-                    item_of_result = result[key]
+                if key.split()[0] in result:
+                    item_of_result = result[key.split()[0]]
                     if type(item_of_result) is list:
+                        if key.split()[0]=="location" and len(key.split())>1:
+                            response[0]["location"] = key.split()[1]
                         item_of_result.append(response[0])
-                        result[key] = item_of_result
+                        result[key.split()[0]] = item_of_result
                     else:
                         new_list = [item_of_result, response[0]]
-                        result[key] = new_list
+                        result[key.split()[0]] = new_list
                 else:
-                    if key == "server": # if we found block "server"
+                    if key == "server":
                         result[key] = [response[0],]
+                    elif key.split()[0] == "location":
+                        if len(key.split())>1:
+                            response[0]["location"] = key.split()[1]
+                        result[key.split()[0]] = [response[0],]
                     else:
                         result[key] = response[0]
 
@@ -71,6 +77,22 @@ class NginxConfigReader:
         file = open(path)
         config = ''.join(file.readlines())
         result['main']=(self.config_handler(config))[0]
+
+        # If there aren't blocks "server" and "location",
+        # we must specify empty values ​​for keys "server" and "location"
+
+        if "http" not in result['main']:
+            result['main']["http"] = {}
+        if "server" not in result['main']["http"].keys():
+            result['main']["http"]["server"] = [{"location":[{},]},]
+        else:
+            if len(result['main']["http"]["server"])==0:
+                result['main']["http"]["server"] = [{"location":[{},]},]
+            else:
+                for item in result['main']["http"]["server"]:
+                    if "location" not in item:
+                        item["location"] = [{},]
+
         return result
 
 

@@ -136,23 +136,32 @@
                             <p><b>set</b> <input id="input_set_path" type="text" value="{{ item.set }}">;</p>
 {#            TODO need to add parameter include                #}
 {#                            <p><b>include</b> /usr/local/ispmgr/etc/nginx.inc;<input id="input_include_nginx_inc" type="checkbox" value="on"></p>#}
-
-                            <a href="#" onclick="createLocation(this.parentNode,this);" class="button_add">add location here</a>
-                            <details id="details_location" class="details">
-                                <summary>location</summary>
-                                <a href="#" onclick="deleteLocation(this.parentNode);" class="button_delete">delete</a>
-                                <p><b>location</b> <input id="input_location" type="text"></p>
-                                <p><b>root</b> <input id="input_root" type="text">;</p>
-                                <p><b>access_log</b> <input id="input_location_access_log" type="checkbox" value="on">;</p>
-                                <p><b>error_page</b> <input id="input_location_error_page" type="text">;</p>
-                                <p><b>proxy_pass</b> <input id="input_proxy_pass" type="text">;</p>
-                                <p><b>proxy_redirect</b> <input id="proxy_redirect" type="checkbox" value="on">;</p>
-                                <p><b>proxy_set_header</b> <input id="input_proxy_set_header" type="text">;</p> {# несколько штук #}
-                                <p><b>proxy_connect_timeout</b> <input id="input_proxy_connect_timeout" type="number" min="1">;</p>
-                                <p><b>proxy_send_timeout</b> <input id="input_proxy_send_timeout" type="number" min="1">;</p>
-                                <p><b>proxy_read_timeout</b> <input id="input_proxy_read_timeout" type="number" min="1">;</p>
-                                <p><b>expires</b> <input id="input_expires" type="text">;</p>
-                            </details>
+                           {% for item_location in item.location %}
+                                <a href="#" onclick="createLocation(this.parentNode,this);" class="button_add">add location here</a>
+                                <details id="details_location" class="details">
+                                    <summary>location</summary>
+                                    <a href="#" onclick="deleteLocation(this.parentNode);" class="button_delete">delete</a>
+                                    <p><b>location</b> <input id="input_location" type="text" value="{{ item_location.location }}"></p>
+                                    <p><b>root</b> <input id="input_root" type="text" value="{{ item_location.root }}">;</p>
+                                    {%  if item_location.access_log %}
+                                        <p><b>access_log</b> <input id="input_location_access_log" type="checkbox" value="on" checked>;</p>
+                                    {% else %}
+                                        <p><b>access_log</b> <input id="input_location_access_log" type="checkbox" value="on">;</p>
+                                    {% endif %}
+                                    <p><b>error_page</b> <input id="input_location_error_page" type="text" value="{{ item_location.error_page }}">;</p>
+                                    <p><b>proxy_pass</b> <input id="input_proxy_pass" type="text" value="{{ item_location.proxy_pass }}">;</p>
+                                    {%  if item_location.proxy_redirect %}
+                                        <p><b>proxy_redirect</b> <input id="proxy_redirect" type="checkbox" value="on" checked>;</p>
+                                    {% else %}
+                                        <p><b>proxy_redirect</b> <input id="proxy_redirect" type="checkbox" value="on">;</p>
+                                    {% endif %}
+                                    <p><b>proxy_set_header</b> <input id="input_proxy_set_header" type="text" value="{{ item_location.proxy_set_header }}">;</p> {# несколько штук #}
+                                    <p><b>proxy_connect_timeout</b> <input id="input_proxy_connect_timeout" type="number" min="1" value="{{ item_location.proxy_connect_timeout }}">;</p>
+                                    <p><b>proxy_send_timeout</b> <input id="input_proxy_send_timeout" type="number" min="1" value="{{ item_location.proxy_send_timeout }}">;</p>
+                                    <p><b>proxy_read_timeout</b> <input id="input_proxy_read_timeout" type="number" min="1" value="{{ item_location.proxy_read_timeout }}">;</p>
+                                    <p><b>expires</b> <input id="input_expires" type="text" value="{{ item_location.expires }}">;</p>
+                                </details>
+                         {% endfor %}
                             <a href="#" onclick="createLocation(this.parentNode, this);" class="button_add">add location here</a>
                         </details>
                     {% endfor %}

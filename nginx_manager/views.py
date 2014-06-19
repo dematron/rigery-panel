@@ -6,7 +6,6 @@ from django.views.decorators.csrf import csrf_protect
 from scripts.config_rw.nginx_config_reader import NginxConfigReader
 import constant
 
-
 #load data from nginx.conf
 def load_config():
     reader = NginxConfigReader()
@@ -16,8 +15,6 @@ def load_config():
         return [-1, None]
     else:
         block_main = result["main"]
-        if "server" not in block_main["http"].keys():
-            block_main["http"]["server"] = [{},]
         return [0, block_main]
 
 @login_required
