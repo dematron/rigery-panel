@@ -33,7 +33,19 @@ class NginxConfigReader:
                 continue
             elif self.pattern_easy.match(buffer): #pattern_easy
                 buffer = buffer.strip()
-                result[buffer.split()[0]] = ' '.join(buffer.split()[1:])[:-1]
+                simple_block_key = buffer.split()[0];
+                simple_block_value = ' '.join(buffer.split()[1:])[:-1]
+
+                # If the resulting dictionary contains the specified key as "include",
+#                 it is necessary that key value stored in the list.
+                if simple_block_key == "include":
+                    if simple_block_key in result:
+                        result[simple_block_key].append(simple_block_value)
+                    else:
+                        result[simple_block_key] = [simple_block_value, ]
+                else:
+                    result[simple_block_key] = simple_block_value
+
                 buffer = ""
             elif self.pattern_block.match(buffer): #pattern_block
                 index += 1
@@ -41,7 +53,7 @@ class NginxConfigReader:
                 buffer = buffer.strip()
                 key = ' '.join(buffer.split()[0:-1])
 
-#               If the resulting dictionary contains the specified key,
+#               If the resulting dictionary contains the specified key as "location" or "server",
 #               it is necessary that key value stored in the list.
 
                 if key.split()[0] in result:

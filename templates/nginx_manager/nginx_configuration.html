@@ -17,6 +17,7 @@
                 <h2>NGINX configuration:</h2>
             </header>
             {% csrf_token %}
+            <p><b>nginx.conf location:</b> {{ nginx_conf_location }}</p>
             <fieldset id="fieldset_main">
                 <legend>main</legend>
                     <p><b>user </b><input id="input_user" type="text" value="{{ user }}">;</p>
@@ -33,85 +34,82 @@
                         <p>
                             <b>use</b>
                             {% if "kqueue" in events.use %}
-                                <input type="radio" name="use_item" value="kqueue" checked>kqueue
+                                <input type="radio" name="input_use_item" value="kqueue" checked>kqueue
                             {% else %}
-                                <input type="radio" name="use_item" value="kqueue">kqueue
+                                <input type="radio" name="input_use_item" value="kqueue">kqueue
                             {% endif %}
                             {% if "rtsig" in events.use %}
-                                <input type="radio" name="use_item" value="rtsig" checked>rtsig
+                                <input type="radio" name="input_use_item" value="rtsig" checked>rtsig
                             {% else %}
-                                <input type="radio" name="use_item" value="rtsig">rtsig
+                                <input type="radio" name="input_use_item" value="rtsig">rtsig
                             {% endif %}
                             {% if "epoll" in events.use %}
-                                <input type="radio" name="use_item" value="epoll" checked>epoll
+                                <input type="radio" name="input_use_item" value="epoll" checked>epoll
                             {% else %}
-                                <input type="radio" name="use_item" value="epoll">epoll
+                                <input type="radio" name="input_use_item" value="epoll">epoll
                             {% endif %}
                             {% if "/dev/poll" in events.use %}
-                                <input type="radio" name="use_item" value="/dev/poll" checked>/dev/poll
+                                <input type="radio" name="input_use_item" value="/dev/poll" checked>/dev/poll
                             {% else %}
-                                <input type="radio" name="use_item" value="/dev/poll">/dev/poll
+                                <input type="radio" name="input_use_item" value="/dev/poll">/dev/poll
                             {% endif %}
                             {% if "select" in events.use %}
-                                <input type="radio" name="use_item" value="select" checked>select
+                                <input type="radio" name="input_use_item" value="select" checked>select
                             {% else %}
-                                <input type="radio" name="use_item" value="select">select
+                                <input type="radio" name="input_use_item" value="select">select
                             {% endif %}
                             {% if "poll" in events.use %}
-                                <input type="radio" name="use_item" value="poll" checked>poll;
+                                <input type="radio" name="input_use_item" value="poll" checked>poll;
                             {% else %}
-                                <input type="radio" name="use_item" value="poll">poll;
+                                <input type="radio" name="input_use_item" value="poll">poll;
                             {% endif %}
                         </p>
                 </details>
 {#     block http       #}
                 <details id="details_http" class="details">
                     <summary>http</summary>
-                    {% if http.include %}
-                        <p><b>include</b> /etc/nginx/mime.types; <input type="checkbox" name="input_include_types" value="include_types" checked> </p>
-                    {% else %}
-                        <p><b>include</b> /etc/nginx/mime.types; <input type="checkbox" name="input_include_types" value="include_types"> </p>
-                    {% endif %}
-{# TODO need add include on the page  #}
-                    {#                    <p><b>include</b> /etc/nginx/conf.d/*.conf; <input type="checkbox" name="input_include_conf" value="include_types"> </p>#}
+                    <a href="#" onclick="addOptionInclude(this.parentNode,this);" class="button_add">add option "include"</a>
+                    {% for include_item in http.include %}
+                        <p><b>include </b><input name="input_include_http" type="text" value="{{ include_item }}">;</p>
+                    {% endfor %}
                     <p><b>default_type</b> <input id="input_default_type" type="text" value="{{ http.default_type }}">;</p>
-{# TODO need add log_format on the page #}
-{#                    <p><b>log_format</b> <input id="input_log_format" type="text"></p> {# может быть несколько #}
-{#                    <textarea id="textarea_log_format" cols="50" rows="4"></textarea>;#}
+
+                    <p><b>log_format</b></p> {# может быть несколько #}
+                    <textarea id="textarea_log_format" cols="50" rows="4">{{ http.log_format }}</textarea>;
                     {% if http.sendfile %}
-                        <p><b>sendfile </b><input type="checkbox" name="input_sendfile" value="on" checked>;</p>
+                        <p><b>sendfile </b><input type="checkbox" id="input_sendfile" value="on" checked>;</p>
                     {% else %}
-                        <p><b>sendfile </b><input type="checkbox" name="input_sendfile" value="on">;</p>
+                        <p><b>sendfile </b><input type="checkbox" id="input_sendfile" value="on">;</p>
                     {% endif %}
                     {% if http.tcp_nopush %}
-                        <p><b>tcp_nopush </b><input type="checkbox" name="input_tcp_nopush" value="on" checked>;</p>
+                        <p><b>tcp_nopush </b><input type="checkbox" id="input_tcp_nopush" value="on" checked>;</p>
                     {% else %}
-                        <p><b>tcp_nopush </b><input type="checkbox" name="input_tcp_nopush" value="on">;</p>
+                        <p><b>tcp_nopush </b><input type="checkbox" id="input_tcp_nopush" value="on">;</p>
                     {% endif %}
                     {% if http.tcp_nodelay %}
-                        <p><b>tcp_nodelay </b><input type="checkbox" name="input_tcp_nodelay" value="on" checked>;</p>
+                        <p><b>tcp_nodelay </b><input type="checkbox" id="input_tcp_nodelay" value="on" checked>;</p>
                     {% else %}
-                        <p><b>tcp_nodelay </b><input type="checkbox" name="input_tcp_nodelay" value="on">;</p>
+                        <p><b>tcp_nodelay </b><input type="checkbox" id="input_tcp_nodelay" value="on">;</p>
                     {% endif %}
                     {% if http.server_tokens %}
-                        <p><b>server_tokens </b><input type="checkbox" name="input_server_tokens" value="on" checked>;</p>
+                        <p><b>server_tokens </b><input type="checkbox" id="input_server_tokens" value="on" checked>;</p>
                     {% else %}
-                        <p><b>server_tokens </b><input type="checkbox" name="input_server_tokens" value="on">;</p>
+                        <p><b>server_tokens </b><input type="checkbox" id="input_server_tokens" value="on">;</p>
                     {% endif %}
                     {% if http.gzip %}
-                        <p><b>gzip </b><input type="checkbox" name="input_gzip" value="on" checked>;</p>
+                        <p><b>gzip </b><input type="checkbox" id="input_gzip" value="on" checked>;</p>
                     {% else %}
-                        <p><b>gzip </b><input type="checkbox" name="input_gzip" value="on">;</p>
+                        <p><b>gzip </b><input type="checkbox" id="input_gzip" value="on">;</p>
                     {% endif %}
                     {% if http.gzip_static %}
-                        <p><b>gzip_static </b><input type="checkbox" name="input_gzip_static" value="on" checked>;</p>
+                        <p><b>gzip_static </b><input type="checkbox" id="input_gzip_static" value="on" checked>;</p>
                     {% else %}
-                        <p><b>gzip_static </b><input type="checkbox" name="input_gzip_static" value="on">;</p>
+                        <p><b>gzip_static </b><input type="checkbox" id="input_gzip_static" value="on">;</p>
                     {% endif %}
                     {%  if http.gzip_vary %}
-                        <p><b>gzip_vary </b><input type="checkbox" name="input_gzip_vary" value="on" checked>;</p>
+                        <p><b>gzip_vary </b><input type="checkbox" id="input_gzip_vary" value="on" checked>;</p>
                     {% else %}
-                        <p><b>gzip_vary </b><input type="checkbox" name="input_gzip_vary" value="on">;</p>
+                        <p><b>gzip_vary </b><input type="checkbox" id="input_gzip_vary" value="on">;</p>
                     {% endif %}
                     <p><b>gzip_comp_level </b><input name="input_gzip_comp_level" type="number" min="0" max="9" value="{{ http.gzip_comp_level }}">;</p>
                     <p><b>gzip_min_length </b><input name="input_gzip_min_length" type="number" min="0" max="100000" value="{{ http.gzip_min_length }}">;</p>
@@ -134,9 +132,12 @@
                             <p><b>index</b> <input id="input_index_page" type="text" value="{{ item.index }}">;</p>
                             <p><b>error_page</b> <input id="input_error_page" type="text" value="{{ item.error_page }}">;</p>
                             <p><b>set</b> <input id="input_set_path" type="text" value="{{ item.set }}">;</p>
-{#            TODO need to add parameter include                #}
-{#                            <p><b>include</b> /usr/local/ispmgr/etc/nginx.inc;<input id="input_include_nginx_inc" type="checkbox" value="on"></p>#}
-                           {% for item_location in item.location %}
+                            <a href="#" onclick="addOptionInclude(this.parentNode,this);" class="button_add">add option "include"</a>
+                            {% for include_item in item.include %}
+                                <p><b>include </b><input id="input_include_server" type="text" value="{{ include_item }}">;</p>
+                            {% endfor %}
+                            <p></p>
+                            {% for item_location in item.location %}
                                 <a href="#" onclick="createLocation(this.parentNode,this);" class="button_add">add location here</a>
                                 <details id="details_location" class="details">
                                     <summary>location</summary>
@@ -171,7 +172,7 @@
             <table class="center">
                 <tr>
                     <td><a href="" onclick="" class="button_save_cancel">cancel</a></td>
-                    <td><a onclick="prepareData();" class="button_save_cancel">save</a></td>
+                    <td><a  onclick="prepareData();" class="button_save_cancel">save</a></td>
                 </tr>
             </table>
         </article>

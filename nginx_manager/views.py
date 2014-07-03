@@ -15,19 +15,19 @@ def load_config():
         return [-1, None]
     else:
         block_main = result["main"]
+        block_main["nginx_conf_location"] = constant.DEFAULT_NGINX_LOCATION
         return [0, block_main]
 
 @login_required
 @csrf_protect
 def nginx_configuration_interface(request):
     if request.is_ajax():
-        if request.method == 'GET':
-            print "GET"
-            print request
-        elif request.method == 'POST':
+        if request.method == 'POST':
             print "POST"
             print request.POST
-        return render_to_response("nginx_manager/nginx_configuration.html", context_instance=RequestContext(request))
+        return render_to_response("test_page.html", {"test_text" : request.POST}, context_instance=RequestContext(request))
+        # else:
+        #     return render_to_response("test_page.html", {"test_text" : "Unknown error"}, context_instance=RequestContext(request))
     else:
         response = load_config()
         if response[0] == 0:
@@ -35,5 +35,11 @@ def nginx_configuration_interface(request):
             return render_to_response(
                 "nginx_manager/nginx_configuration.html",
                 result,
+                context_instance=RequestContext(request),
+            )
+        else:
+            return render_to_response(
+                "nginx_manager/nginx_configuration.html",
+                {"nginx_conf_location": "unknown"},
                 context_instance=RequestContext(request),
             )
