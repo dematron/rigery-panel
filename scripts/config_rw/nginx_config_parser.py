@@ -8,9 +8,10 @@ This class contains some methods for reading and parsing file "nginx.conf".
 __author__ = 'Alexey Kutepov'
 
 import re
+from nginx_config_rw import NginxConfigRW
 
 
-class NginxConfigReader:
+class NginxConfigParser(NginxConfigRW):
     def __init__(self):
 
         #Initialization of patterns:
@@ -83,11 +84,10 @@ class NginxConfigReader:
             index += 1
         return [result, index]
 
-#   Reading file "nginx.conf"
-    def read(self, path):
+#   Parsing file "nginx.conf"
+    def parse(self, path):
         result = {}
-        file = open(path)
-        config = ''.join(file.readlines())
+        config = self.read(path)
         result['main']=(self.config_handler(config))[0]
 
         # If there aren't blocks "server" and "location",
@@ -109,6 +109,6 @@ class NginxConfigReader:
 
 
 if __name__=='__main__':
-    reader = NginxConfigReader()
+    reader = NginxConfigParser()
     path = raw_input("Enter the path to file: ")
     print reader.read(path)

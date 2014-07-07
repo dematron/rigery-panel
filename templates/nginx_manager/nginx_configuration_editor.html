@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+{% block style %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "css/index.css" %}" />
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "css/nginx_manager/nginx_configuration.css" %}" />
+{% endblock %}
+{% block scripts %}
+    {% load staticfiles %}
+    <script src="{% static "scripts/nginx_manager/nginx_configuration_script.js" %}"></script>
+    <script src="{% static "scripts/jquery/jquery-1.11.1.js" %}"></script>
+{% endblock %}
+{% block content %}
+    <section class="content_section">
+        <article>
+            <header>
+                <h2>NGINX configuration:</h2>
+            </header>
+            <p><b>nginx.conf location:</b> {{ nginx_conf_location }}</p>
+            <form id="form_nginx_conf_text" action="" method="post">
+                {% csrf_token %}
+                <textarea name="nginx_config_text" class="nginx_config_editor">{{nginx_config_text}}</textarea>
+                <table class="center">
+                    <tr>
+                        <td><a href="" onclick="" class="button_save_cancel">cancel</a></td>
+                        <td><a  onclick="document.getElementById('form_nginx_conf_text').submit(); return false;" class="button_save_cancel">save</a></td>
+                    </tr>
+                </table>
+            </form>
+        </article>
+    </section>
+{% endblock %}

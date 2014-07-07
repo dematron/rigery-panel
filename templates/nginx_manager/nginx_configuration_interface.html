@@ -111,8 +111,8 @@
                     {% else %}
                         <p><b>gzip_vary </b><input type="checkbox" id="input_gzip_vary" value="on">;</p>
                     {% endif %}
-                    <p><b>gzip_comp_level </b><input name="input_gzip_comp_level" type="number" min="0" max="9" value="{{ http.gzip_comp_level }}">;</p>
-                    <p><b>gzip_min_length </b><input name="input_gzip_min_length" type="number" min="0" max="100000" value="{{ http.gzip_min_length }}">;</p>
+                    <p><b>gzip_comp_level </b><input id="input_gzip_comp_level" type="number" min="0" max="9" value="{{ http.gzip_comp_level }}">;</p>
+                    <p><b>gzip_min_length </b><input id="input_gzip_min_length" type="number" min="0" max="100000" value="{{ http.gzip_min_length }}">;</p>
                     <p><b>gzip_proxied</b><input id="input_gzip_proxied" type="text" value="{{ http.gzip_proxied }}">;</p>
                     <p><b>gzip_types</b><input id="input_gzip_types" type="text" value="{{ http.gzip_types }}">;</p>
                     <p><b>gzip_http_version</b><input id="input_gzip_http_version" type="text" value="{{ http.gzip_http_version }}">;</p>
@@ -139,7 +139,7 @@
                             <p></p>
                             {% for item_location in item.location %}
                                 <a href="#" onclick="createLocation(this.parentNode,this);" class="button_add">add location here</a>
-                                <details id="details_location" class="details">
+                                <details id="details_location" name="details_location"  class="details">
                                     <summary>location</summary>
                                     <a href="#" onclick="deleteLocation(this.parentNode);" class="button_delete">delete</a>
                                     <p><b>location</b> <input id="input_location" type="text" value="{{ item_location.location }}"></p>
@@ -152,9 +152,9 @@
                                     <p><b>error_page</b> <input id="input_location_error_page" type="text" value="{{ item_location.error_page }}">;</p>
                                     <p><b>proxy_pass</b> <input id="input_proxy_pass" type="text" value="{{ item_location.proxy_pass }}">;</p>
                                     {%  if item_location.proxy_redirect %}
-                                        <p><b>proxy_redirect</b> <input id="proxy_redirect" type="checkbox" value="on" checked>;</p>
+                                        <p><b>proxy_redirect</b> <input id="input_proxy_redirect" type="checkbox" value="on" checked>;</p>
                                     {% else %}
-                                        <p><b>proxy_redirect</b> <input id="proxy_redirect" type="checkbox" value="on">;</p>
+                                        <p><b>proxy_redirect</b> <input id="input_proxy_redirect" type="checkbox" value="on">;</p>
                                     {% endif %}
                                     <p><b>proxy_set_header</b> <input id="input_proxy_set_header" type="text" value="{{ item_location.proxy_set_header }}">;</p> {# несколько штук #}
                                     <p><b>proxy_connect_timeout</b> <input id="input_proxy_connect_timeout" type="number" min="1" value="{{ item_location.proxy_connect_timeout }}">;</p>

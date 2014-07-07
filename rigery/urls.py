@@ -5,7 +5,7 @@ admin.autodiscover()
 
 from rigery.views import start_page
 from authentication.views import sign_in, sign_out
-from nginx_manager.views import nginx_configuration_interface
+from nginx_manager.views import nginx_configuration_editor
 
 urlpatterns = patterns('',
     # Examples:
@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^$', start_page),
 
     #Servers
-    url(r'^nginx/', nginx_configuration_interface),
+    url(r'^nginx/', nginx_configuration_editor),
 
     url(r'^accounts/login/$', sign_in),
     url(r'^accounts/logout/$', sign_out),

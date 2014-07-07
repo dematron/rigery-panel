@@ -54,4 +54,11 @@
     text-decoration:none;
     border-radius: 2px;
     float: left;
+    cursor: pointer;
+}
+
+.nginx_config_editor {
+    width: 90%;
+    height: 550px;
+    overflow: auto;
 }
