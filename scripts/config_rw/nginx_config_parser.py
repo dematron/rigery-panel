@@ -8,10 +8,10 @@ This class contains some methods for reading and parsing file "nginx.conf".
 __author__ = 'Alexey Kutepov'
 
 import re
-from nginx_config_rw import NginxConfigRW
+from file_rw import FileRW
 
 
-class NginxConfigParser(NginxConfigRW):
+class NginxConfigParser(FileRW):
     def __init__(self):
 
         #Initialization of patterns:

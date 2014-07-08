@@ -7,6 +7,8 @@
   color: #fff;
   cursor: pointer;
 }
+
+
 .details summary::-webkit-details-marker { /* треугольник */
    position: absolute;
    right: 10px;
@@ -57,8 +59,14 @@
     cursor: pointer;
 }
 
+
 .nginx_config_editor {
-    width: 90%;
-    height: 550px;
+    width: 95%;
+    height: 500px;
     overflow: auto;
+}
+
+.error_text {
+    margin: auto;
+    color: red;
 }

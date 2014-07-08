@@ -16,6 +16,7 @@
             <header>
                 <h2>NGINX configuration:</h2>
             </header>
+            <p class="error_text">{{ error_message }}</p>
             <p><b>nginx.conf location:</b> {{ nginx_conf_location }}</p>
             <form id="form_nginx_conf_text" action="" method="post">
                 {% csrf_token %}

@@ -3,7 +3,9 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response, RequestContext
 from django.contrib.auth.decorators import *
 from django.views.decorators.csrf import csrf_protect
-from scripts.config_rw.nginx_config_parser import NginxConfigParser, NginxConfigRW
+from scripts.config_rw.nginx_config_parser import NginxConfigParser
+from scripts.config_rw.file_rw import FileRW
+from errors.rigery_error import RigeryError
 import constant
 
 #load data from nginx.conf
@@ -47,12 +49,15 @@ def nginx_configuration_interface(request):
 @login_required
 @csrf_protect
 def nginx_configuration_editor(request):
-    config_rw = NginxConfigRW()
+    config_rw = FileRW()
     if request.method == "POST":
         text = request.POST.get("nginx_config_text", "unknown");
         if text != "unknown":
-            config_rw.write(constant.DEFAULT_NGINX_LOCATION, text)
             response = {}
+            try:
+                config_rw.write(constant.DEFAULT_NGINX_LOCATION, text)
+            except RigeryError as rigery_error:
+                response["error_message"] = rigery_error.message
             response["nginx_config_text"] = text
             response["nginx_conf_location"] = constant.DEFAULT_NGINX_LOCATION
             return render_to_response(
@@ -63,7 +68,7 @@ def nginx_configuration_editor(request):
         else:
             return render_to_response(
                     "nginx_manager/nginx_configuration_editor.html",
-                    {}, #TODO need add params
+                    {"error_message", "Wrong type of request"},
                     context_instance=RequestContext(request),
                 )
 
