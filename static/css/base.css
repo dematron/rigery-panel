@@ -25,7 +25,21 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, 
     margin: 20px 20px 20px 20px;
     padding: 10px 0px 0px 0px;
     color: white;
+
 }
+
+.header_text a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    font-weight: bold;
+}
+
+.header_text a:hover {
+    color:white;
+    background:SteelBlue;
+}
+
 .section {
     width: 100%;
     min-width: 1000px;

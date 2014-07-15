@@ -14,6 +14,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', start_page),
+    url(r'#$', start_page),
 
     #Servers
     url(r'^nginx/', nginx_configuration_editor),

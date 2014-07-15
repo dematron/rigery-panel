@@ -43,15 +43,6 @@
 
 a:hover{color:#fff; background:CadetBlue;}
 
-.menu {
-    background: LightSteelBlue;
-    padding: 3px 15px 3px 15px;
-    width: 80%;
-    margin: 50px 10px 20px 10px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
-    border-radius: 3px;
-}
-
 .sidebar {
     float: left;
     width: 20%;
@@ -65,4 +56,35 @@ a:hover{color:#fff; background:CadetBlue;}
     padding: 0;
     margin: 50px 0px 70px 80px;
 }
+
+.menu {
+    margin: 5px 20px 5px 10px;
+}
+
+.navbar {
+    padding: 1px 0px 0px 0px;
+    list-style-type: none;
+    width: 90%;
+    margin:50px 0px 0px 20px;
+    background-color: SteelBlue;
+    color: #ffffff;
+    border-radius: 3px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.navbar a {
+    background-color: LightSteelBlue;
+    color: black;
+    padding: 3px;
+    margin: auto;
+    text-decoration: none;
+    display: block;
+    font-weight: bold;
+}
+.navbar a:hover {
+    color:#fff;
+    background:CadetBlue;
+}
+
+
 

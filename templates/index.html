@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{% static "css/index.css" %}" />
 {% endblock %}
 {% block header_buttons %}
-    <a href="accounts/logout/" class="button_sign_out">Sign out</a>
+    <a href="/accounts/logout/" class="button_sign_out">Sign out</a>
 {% endblock %}
 {% block header_menu %}
 {#    <nav class="horizontal_menu">#}
@@ -18,9 +18,12 @@
 {% endblock %}
 {% block main_menu %}
     <nav class="sidebar">
-        <h4 class="menu">Servers</h4>
-        <ul>
-            <li><a href="/nginx/">nginx</a></li>
+        <ul id="navbar" class="navbar">
+            <li><h4 class="menu">Servers</h4></li>
+            <li><a href="/nginx/">Nginx</a></li>
+            <li><a href="#">item1</a></li>
+            <li><a href="#">item2</a></li>
+            <li><a href="#">item3</a></li>
         </ul>
     </nav>
 {% endblock %}
@@ -28,17 +31,17 @@
     <section class="content_section">
         <article>
             <header>
-                <h2>System information:</h2>
-                <p>System hostname: {{ hostname }} ({{ lan_ip }})</p>
-                <p>Operating system: {{ os_name }} {{ os_version }}</p>
-                <p>System architecture: {{ architecture }}</p>
-                <p>Kernel and CPU: {{ kernel_cpu }}</p>
-                <p>Processor information:{{ processor_info }} ({{ core_info }})</p>
-                <p>System uptime: {{ system_uptime }}</p>
-                <p>Running processes: {{ processes }}</p>
-                <p>CPU load averages: {{ cpu_load_avg_0 }} (1 min), {{ cpu_load_avg_1 }} (5 min), {{ cpu_load_avg_2 }} (15 min)</p>
-                <p>CPU usage: User {{ user }}, System {{ system }}, Idle {{ idle }}</p>
-                <p>Memory: {{ memory_total }} total, {{ memory_used }} used, {{ memory_free }} free</p>
+                <h2><b>System information:</b></h2>
+                <p><b>System hostname:</b> {{ hostname }} ({{ lan_ip }})</p>
+                <p><b>Operating system:</b> {{ os_name }} {{ os_version }}</p>
+                <p><b>System architecture</b>: {{ architecture }}</p>
+                <p><b>Kernel and CPU:</b> {{ kernel_cpu }}</p>
+                <p><b>Processor information:</b>{{ processor_info }} ({{ core_info }})</p>
+                <p><b>System uptime:</b> {{ system_uptime }}</p>
+                <p><b>Running processes:</b> {{ processes }}</p>
+                <p><b>CPU load averages:</b> {{ cpu_load_avg_0 }} <b>(1 min),</b> {{ cpu_load_avg_1 }} <b>(5 min),</b> {{ cpu_load_avg_2 }} <b>(15 min)</b></p>
+                <p><b>CPU usage: User </b>{{ user }}, <b>System</b> {{ system }}, <b>Idle</b> {{ idle }}</p>
+                <p><b>Memory:</b> {{ memory_total }} <b>total,</b> {{ memory_used }} <b>used,</b> {{ memory_free }} <b>free</b></p>
             </header>
         </article>
     </section>
