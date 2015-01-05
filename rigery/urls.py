@@ -3,7 +3,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
-from rigery.views import start_page
+from rigery.views import start_page, test_page
 from authentication.views import sign_in, sign_out
 from nginx_manager.views import nginx_configuration_editor
 
@@ -15,6 +15,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', start_page),
     url(r'#$', start_page),
+
+    url(r'^test/', test_page),
 
     #Servers
     url(r'^nginx/', nginx_configuration_editor),
