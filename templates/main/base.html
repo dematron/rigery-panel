@@ -38,9 +38,6 @@
             <li><a href="#">Help</a></li>
             <li><a href="#">Sign out</a></li>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
         </div>
       </div>
     </nav>
@@ -56,8 +53,8 @@
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard</h1>
-          {% block data %}
+          <h1 class="page-header">{{ content_block_title }}</h1>
+          {% block content %}
 
           {% endblock %}
         </div>

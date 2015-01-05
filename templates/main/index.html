@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+{% block content %}
+    <section class="content_section">
+        <article>
+            <header>
+                <p><b>System hostname:</b> {{ hostname }} ({{ lan_ip }})</p>
+                <p><b>Operating system:</b> {{ os_name }} {{ os_version }}</p>
+                <p><b>System architecture</b>: {{ architecture }}</p>
+                <p><b>Kernel and CPU:</b> {{ kernel_cpu }}</p>
+                <p><b>Processor information:</b>{{ processor_info }} ({{ core_info }})</p>
+                <p><b>System uptime:</b> {{ system_uptime }}</p>
+                <p><b>Running processes:</b> {{ processes }}</p>
+                <p><b>CPU load averages:</b> {{ cpu_load_avg_0 }} <b>(1 min),</b> {{ cpu_load_avg_1 }} <b>(5 min),</b> {{ cpu_load_avg_2 }} <b>(15 min)</b></p>
+                <p><b>CPU usage: User </b>{{ user }}, <b>System</b> {{ system }}, <b>Idle</b> {{ idle }}</p>
+                <p><b>Memory:</b> {{ memory_total }} <b>total,</b> {{ memory_used }} <b>used,</b> {{ memory_free }} <b>free</b></p>
+            </header>
+        </article>
+    </section>
+{% endblock %}
