@@ -19,6 +19,9 @@
     <!-- Optional theme -->
     <link rel="stylesheet" href="{% static "css/bootstrap/bootstrap-theme.min.css" %}">
 
+    {% block static %}
+    {% endblock %}
+
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -32,34 +35,15 @@
           </button>
           <a class="navbar-brand" href="#">Rigery Panel</a>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Help</a></li>
-            <li><a href="#">Sign out</a></li>
-          </ul>
-        </div>
+        {% block navbar %}
+        {% endblock %}
       </div>
     </nav>
 
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Analytics</a></li>
-            <li><a href="#">Export</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">{{ content_block_title }}</h1>
-          {% block content %}
 
-          {% endblock %}
-        </div>
-      </div>
-    </div>
+    {% block data %}
+
+    {% endblock %}
 
 
     <!-- Bootstrap core JavaScript

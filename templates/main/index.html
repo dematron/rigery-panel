@@ -1,4 +1,4 @@
-{% extends "main/base.html" %}
+{% extends "main/base_wrapper.html" %}
 {% block content %}
     <section class="content_section">
         <p><b>System hostname:</b> {{ hostname }} ({{ lan_ip }})</p>
@@ -12,6 +12,4 @@
         <p><b>CPU usage: User </b>{{ user }}, <b>System</b> {{ system }}, <b>Idle</b> {{ idle }}</p>
         <p><b>Memory:</b> {{ memory_total }} <b>total,</b> {{ memory_used }} <b>used,</b> {{ memory_free }} <b>free</b></p>
     </section>
-
-
 {% endblock %}

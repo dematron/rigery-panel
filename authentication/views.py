@@ -13,11 +13,11 @@ def sign_in(request):
             auth.login(request, user)
             return HttpResponseRedirect("/")
         else:
-            return render_to_response("login.html",
+            return render_to_response("main/login.html",
                                       {"access_denied": "Access denied", "access_denied_class":"access_denied_text"},
                                       context_instance=RequestContext(request))
     else:
-        return render_to_response("login.html", context_instance=RequestContext(request))
+        return render_to_response("main/login.html", context_instance=RequestContext(request))
 
 @login_required
 def sign_out(request):
