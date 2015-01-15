@@ -103,13 +103,26 @@ def get_core_info():
 def get_system_uptime():
     o = os.popen("uptime").read()
     if o.find("min") != -1:
-        m = re.search("up ((\d+) min,)", o)
-        g, s = m.groups(), ""
-        if g[1] and int(g[1]) > 0:
-            if int(g[1]) == 1:
-                s = s + g[1] + " minute"
+        if o.find("days") != -1:
+            m = re.search("up ((\d+) days,)?\s+(\d+) min,", o)
+            g, s = m.groups(), ""
+            if g[1]:
+                if int(g[1]) == 1:
+                    s = s + g[1] + " day, 0 hours, "
+                else:
+                    s = s + g[1] + " days, 0 hours, "
+            if int(g[2]) == 1:
+                s = s + g[2] + " minute"
             else:
-                s = s + g[1] + " minutes "
+                s = s + g[2] + " minutes"
+        else:
+            m = re.search("up ((\d+) min,)", o)
+            g, s = m.groups(), ""
+            if g[1] and int(g[1]) > 0:
+                if int(g[1]) == 1:
+                    s = s + g[1] + " minute"
+                else:
+                    s = s + g[1] + " minutes"
     else:
         m = re.search("up ((\d+) days,)?\s+(\d+):(\d+)", o)
         g, s = m.groups(), ""
@@ -120,14 +133,13 @@ def get_system_uptime():
                 s = s + g[1] + " days, "
         if g[2] and int(g[2]) > 0:
             if int(g[2]) == 1:
-                print g[2]
                 s = s + g[2] + " hour, "
             else:
                 s = s + g[2] + " hours, "
         if int(g[3]) == 1:
             s = s + g[3] + " minute"
         else:
-            s = s + g[3] + " minutes "
+            s = s + g[3] + " minutes"
     return s
 
 # Number of running processes
@@ -272,7 +284,7 @@ def get_host_info():
     host_info.update(get_os_info())
     return host_info
 
-if __name__=="__main__":
+if __name__ == "__main__":
     cpu_use = get_cpu_use()
     os_info = get_os_info()
     memory = get_linux_memory()
