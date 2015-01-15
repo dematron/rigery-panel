@@ -63,7 +63,7 @@ def get_os_info():
             os_ver = platform.linux_distribution()[1] + ' ' + '(' + platform.linux_distribution()[2] + ')'
         else:
             os_name = platform.linux_distribution()[1]
-    return {"os_name":os_name, "os_version":os_ver}
+    return {"os_name": os_name, "os_version": os_ver}
 
 # Arch
 def get_arch():
@@ -142,8 +142,50 @@ def get_system_uptime():
             s = s + g[3] + " minutes"
     return s
 
+# Linux-only alternative (for memory)
+"""
+#----------------------------------------
+# Gives a human-readable uptime string
+def uptime():
+
+     try:
+         f = open("/proc/uptime")
+         contents = f.read().split()
+         f.close()
+     except:
+        return "Cannot open uptime file: /proc/uptime"
+
+     total_seconds = float(contents[0])
+
+     # Helper vars:
+     MINUTE  = 60
+     HOUR    = MINUTE * 60
+     DAY     = HOUR * 24
+
+     # Get the days, hours, etc:
+     days    = int( total_seconds / DAY )
+     hours   = int( ( total_seconds % DAY ) / HOUR )
+     minutes = int( ( total_seconds % HOUR ) / MINUTE )
+     seconds = int( total_seconds % MINUTE )
+
+     # Build up the pretty string (like this: "N days, N hours, N minutes, N seconds")
+     string = ""
+     if days > 0:
+         string += str(days) + " " + (days == 1 and "day" or "days") + ", "
+     if len(string) > 0 or hours > 0:
+         string += str(hours) + " " + (hours == 1 and "hour" or "hours") + ", "
+     if len(string) > 0 or minutes > 0:
+         string += str(minutes) + " " + (minutes == 1 and "minute" or "minutes") + ", "
+     string += str(seconds) + " " + (seconds == 1 and "second" or "seconds")
+
+     return string
+
+#print "The system uptime is:", uptime()
+"""
+
 # Number of running processes
 def get_processes_numbers():
+    process_count = 0
     if platform.system() == "Linux":
         pids = []
         for subdir in os.listdir('/proc'):
@@ -205,7 +247,8 @@ def cpu_percents(sample_duration=1):
 def get_cpu_use():
     if platform.system() == "Linux":
         linux_cpu_use = cpu_percents()
-        return {"user":linux_cpu_use["user"], "system":linux_cpu_use["system"], "idle":linux_cpu_use["idle"]}
+        return dict(user="%.2f" % linux_cpu_use["user"], system="%.2f" % linux_cpu_use["system"],
+                    idle="%.2f" % linux_cpu_use["idle"])
     elif platform.system() == "Darwin":
         proc = subprocess.Popen(['/usr/bin/top', '-l', '1', '-n' '0'], shell=False, stdout=subprocess.PIPE)
         proc_comm = proc.communicate()[0]
@@ -213,9 +256,9 @@ def get_cpu_use():
         user = top_out.split()[0]
         system = top_out.split()[2]
         idle = top_out.split()[4]
-        return {"user":user, "system":system, "idle":idle}
+        return {"user": user, "system": system, "idle": idle}
     else:
-        return {"user":"unknown", "system":"unknown", "idle":"unknown"}
+        return {"user": "unknown", "system": "unknown", "idle": "unknown"}
 
 # Memory
 ## If Linux
@@ -244,9 +287,9 @@ def getRAMpercentage(total, used):
 
 def linux_memory():
     infoRAM = getRAMinformations()
-    totalRAM = round(int(infoRAM[0]) / 1000,1)
-    usedRAM = round(int(infoRAM[1]) / 1000,1)
-    freeRAM = round(int(infoRAM[2]) / 1000,1)
+    totalRAM = round(int(infoRAM[0]) / 1000, 1)
+    usedRAM = round(int(infoRAM[1]) / 1000, 1)
+    freeRAM = round(int(infoRAM[2]) / 1000, 1)
     percentRAM = getRAMpercentage(totalRAM, usedRAM)
     return infoRAM, totalRAM, usedRAM, freeRAM, percentRAM
 
@@ -258,26 +301,26 @@ def get_linux_memory():
     else:
         memory = ("unknown", "unknown", "unknown")
     result = {
-        "memory_total":memory[0],
-        "memory_used":memory[1],
-        "memory_free":memory[2]
+        "memory_total": memory[0],
+        "memory_used": memory[1],
+        "memory_free": memory[2]
     }
     return result
 
 def get_host_info():
     cpu_load_avg = get_cpu_load_avg()
     host_info = {
-        "hostname" : get_hostname(),
-        "lan_ip" : get_lan_ip(),
-        "architecture" : get_arch(),
-        "kernel_cpu" : get_kernel_cpu(),
-        "processor_info" : get_processor_info(),
-        "core_info" : get_core_info(),
-        "system_uptime" : get_system_uptime(),
-        "processes" : get_processes_numbers(),
-        "cpu_load_avg_0" : cpu_load_avg[0],
-        "cpu_load_avg_1" : cpu_load_avg[1],
-        "cpu_load_avg_2" : cpu_load_avg[2],
+        "hostname": get_hostname(),
+        "lan_ip": get_lan_ip(),
+        "architecture": get_arch(),
+        "kernel_cpu": get_kernel_cpu(),
+        "processor_info": get_processor_info(),
+        "core_info": get_core_info(),
+        "system_uptime": get_system_uptime(),
+        "processes": get_processes_numbers(),
+        "cpu_load_avg_0": cpu_load_avg[0],
+        "cpu_load_avg_1": cpu_load_avg[1],
+        "cpu_load_avg_2": cpu_load_avg[2],
     }
     host_info.update(get_linux_memory())
     host_info.update(get_cpu_use())
@@ -295,8 +338,10 @@ if __name__ == "__main__":
     print "Processor information: %s (%s)" % (get_processor_info(), get_core_info())
     print "System uptime: %s" % get_system_uptime()
     print "Running processes: %s" % get_processes_numbers()
-    print "CPU load averages: %.2f (1 min) %.2f (5 min) %.2f (15 min)" % (get_cpu_load_avg()[0], get_cpu_load_avg()[1], get_cpu_load_avg()[2])
-    print "CPU usage: User %s, System %s, Idle %s" % (cpu_use["user"], cpu_use["system"], cpu_use["idle"])
+    print "CPU load averages: {0:.2f} (1 min) {1:.2f} (5 min) {2:.2f} (15 min)".format(get_cpu_load_avg()[0],
+                                                                                       get_cpu_load_avg()[1],
+                                                                                       get_cpu_load_avg()[2])
+    print "CPU usage: User {0:s}, System {1:s}, Idle {2:s}".format(cpu_use["user"], cpu_use["system"], cpu_use["idle"])
     print "Memory: %s total, %s used, %s free" % (memory["memory_total"], memory["memory_used"], memory["memory_free"])
 
     print get_host_info()
